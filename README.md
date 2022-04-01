@@ -1,10 +1,10 @@
 # NodeJs
 
-# configure project
+## configure project
 
 `npm init`
 
-# install express locally 
+## install express locally 
 
 `npm install express`
 
@@ -12,31 +12,31 @@ or specific version
 
 `npm install express@4`
 
-# install Babel library & CLI(command-line interface) locally 
+## install Babel library & CLI(command-line interface) locally 
 
 `npm install --save-dev @babel/core@7 @babel/cli@7`
 
-# install Babel globally (optional, locally prefered)
+## install Babel globally (optional, locally prefered)
 
 `npm install --global --save-dev  @babel/cli`
 
-# check install verion of Babel
+## check install verion of Babel
 
 `node_modules/.bin/babel --version`
 
-# transform JSX syntax into regular JavaScript
+## for transform JSX syntax into regular JavaScript
 
 `npm install --save-dev @babel/preset-react@7`
 
-# transform App.jsx into pure JavaScript
+## transform App.jsx into pure JavaScript
 
 `npx babel src --presets @babel/react --out-dir public`
 
-# start your application
+## start your application
 
 `npm start`
 
-# go to browser, paste one of following links
+## open browser, paste one of following links
 
 ```
 http://localhost:3000
