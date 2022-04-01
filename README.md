@@ -43,3 +43,7 @@ http://localhost:3000
 http://localhost:3000/index.html
 localhost:3000
 ```
+
+## for additional information about installing packages visit
+
+` https://docs.npmjs.com/cli/install `
