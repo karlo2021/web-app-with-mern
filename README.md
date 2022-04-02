@@ -66,9 +66,9 @@ changes for using the -w option. Since all the server files are going to be in t
 ...
  "scripts": {
  <del>"start": "node server/server.js",</del>
- <strong>"start": "nodemon -w server server/server.js"</strong>
- <strong>"compile": "babel src --out-dir public",</strong>
- <strong>"watch": "babel src --out-dir public --watch --verbose",</strong>
+ <b>"start": "nodemon -w server server/server.js"</b>
+ <b>"compile": "babel src --out-dir public",</b>
+ <b>"watch": "babel src --out-dir public --watch --verbose",</b>
  "test": "echo \"Error: no test specified\" && exit 1"
  },
 ...
