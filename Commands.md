@@ -34,7 +34,7 @@ or specific version
 
 ## start your application
 
-`npm start`
+`npm run watch`
 
 ## open browser, paste one of following links
 

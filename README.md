@@ -1,117 +1,80 @@
 # NodeJs
 
-## older browser support
+## custom commands
 
-JavaScript code will work in all modern browsers that support ES2015. The older browsers don’t support things like Arrow Functions and the Array.from() method.
-
- > Let’s make some changes to the JavaScript and React to use some of these advanced ES2015 features
- > Then, let’s make changes to support all these features in older browsers as well
-
-Babel is capable of transforming newer JavaScript features into older JavaScript, that is, ES5.
-
- > there is a plugin for each of these features
-
-Plugin called plugintransform-arrow-functions. We can install this plugin and use it in addition to the React preset like this:<br />
-
-`$ npm install --no-save @babel/plugin-transform-arrow-functions@7`
-
+Apart from being able to start the project using npm start, npm has the ability to define other custom commands. This is especially useful when there are many command line parameters for the command.
 <br />
-We used the --no-save install option because this is a temporary installation, and we don’t want
-package.json to change because of the temporary installation.<br />
+ > These custom commands can be specified in the scripts section of package.json
+ > Then be run using npm run <script> from the console
 
- > transform the source file like this
-
-```
- npx babel src --presets @babel/react 
---plugins=@babel/plugin-transform-arrow-functions --out-dir public
-```
-
-Choeckout the output of the transform, App.js, you will see that arrow functions have been
-replaced with regular functions.
-
- > How does one know which plugins have to be used?
-
-Babel does the job of automatically figuring this out via a preset called preset-env. This preset lets us specify the target browsers that we need to support and automatically applies all the transforms and plugins that are required to support those browsers.
-
- > uninstall the transform-arrow-function preset
- > install instead the env preset that includes all the other plugins.
-
-`npm uninstall @babel/plugin-transform-arrow-functions@7`
-`npm install --save-dev @babel/preset-env@7`
-
-### Configuration File
-
-Instead of using the command-line (which can get quite lengthy if we do use it), let’s specify the presets that need to be used in a configuration file.
-
- > Babel looks for this in a file called **.babelrc**
-
-Since we have all the client-side code in the directory called src, let’s create this file in that
-directory.
-
- > .babelrc file is a JSON file, which can contain presets as well as plugins
-```
-{
- "presets": ["@babel/preset-env", "@babel/preset-react"]
-}
-```
-
-The preset preset-env needs further configuration to specify target browsers and their versions.
-**Targets** is an object with the key as the browser name and the value as its targeted version:
+ - Add a script called compile whose command line is the Babel command line to do all transforms
 
 ```
-["@babel/preset-env", {
- "targets": {
- "safari": "10",
+...
+ "compile": "babel src --out-dir public",
+...
+```
+We don’t need the npx prefix because npm automatically figures out the location of commands
+that are part of any locally installed packages.
+
+ - Run transform command
+ <br />
+ `npm run compile`
+ <br />
+ After this, if you run npm start again to start the server
+
+ <br />
+ When we work on the client-side code and change the source files frequently, we have to manually
+recompile it for every change. Wouldn’t it be nice if someone could detect these changes for us and
+recompile the source into JavaScript? Babel supports this out of the box via the --watch option.
+
+ > Add another script called **watch** with this additional option to the Babel command line:
+
+```
+...
+ "wathc": "babel src --out-dir public --watch --verbose"
+...
+```
+< b/>
+It is essentially the same command as compile, but with two extra command line options, --watch and
+--verbose.
+ > **--watch** option instructs Babel to watch for changes in source files
+ > **--verbose** causes it to print out line in the console whenever a change causes a recompilation
+
+ A similar restart on changes to the server code can be affected by using a wrapper command called
+nodemon. This command restarts Node.js with the command specified whenever there is a change in a set of files. <b />
+**Forever** is another package that can be used to achieve the same goal. Typically, forever is used to restart the server on crashes rather than watch for changes to files. <b />
+The best practice is to use nodemon during development (where watching for changes is the real need) and forever on production (where restarting on crashes is the need)
+
+ > install nodemon
+
+ `npm install nodemon@1`
+
+ let’s use nodemon to start the server instead of Node.js in the script specification for start in
+package.json. The command nodemon also needs an option to indicate which files or directory to watch
+changes for using the -w option. Since all the server files are going to be in the directory called server, we can use **-w server** to make nodemon restart Node.js when any file in that directory changes. <b />
+ > new command for the start script within package.json will now be
+ ```
  ...
-  }
- }]
- ```
- > include support for IE version 11 and slightly older versions of the other popular browsers
-
- - The complete configuration file is shown src/.babelrc
-
- ```
-{
-    "presets": [
-        ["@babel/preset-env", {
-            "targets": {
-                "ie": "11",
-                "edge": "15",
-                "safari": "10",
-                "firefox": "50",
-                "chrome": "49"
-            }
-        }],
-        "@babel/preset-react"
-    ]
-}
+ "start": "nodemon -w server server/server.js"
+ ...
  ```
 
- >  Now run babel command without specifying any presets on the command-line:
- `npx babel src --out-dir public`
-
- ### Note
-
-Inspect the generated App.js<br />
- > arrow function has been replaced with a regular function
- > string interpolation has been replaced with a string concatenation
-
-if you test on an Internet Explorer version 11, the code will still not work. All such function implementations to supplement the missing implementation in older browsers are called polyfills.
-
- > Babel provides these polyfills too
- > They need to be included in the HTML file to make these functions available
- 
- - changes to index.html
+  > The final set of scripts added or changed in package.json 
 
 <pre>
 ...
- <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
- <b><script src="https://unpkg.com/@babel/polyfill@7/dist/polyfill.min.js"></script</b>
-</head>
+ "scripts": {
+ <del>"start": "node server/server.js",</del>
+ <strong>"start": "nodemon -w server server/server.js"</strong>
+ <strong>"compile": "babel src --out-dir public",</strong>
+ <strong>"watch": "babel src --out-dir public --watch --verbose",</strong>
+ "test": "echo \"Error: no test specified\" && exit 1"
+ },
 ...
 </pre>
-
- > Now, the code can work on Internet Explorer as well
-<br />
-
- ![RootDir](./resources/ie-code-run.JPG)
+<b />
+ If you now run the new command using <bold>npm run watch</bold>, you will notice that it does one transform, but  it doesn’t return to the shell. It’s actually waiting in a permanent loop, watching for changes to the source files.
+ <b />So, to run the server, another terminal is needed, where npm start can be executed.<b />
+ If you make make a small change to App.jsx and save the file, you’ll see that App.js in the public
+ directory is regenerated. And, when you refresh the browser, you can see those changes without having to manually recompile. You can also make any changes to server.js and see that the server starts, with a message on the console that says the server is being restarted
