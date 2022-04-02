@@ -113,4 +113,4 @@ if you test on an Internet Explorer version 11, the code will still not work. Al
 
  > Now, the code can work on Internet Explorer as well
 <br />
-![ie](./resources/ie-code-run.JPG)
+![IExplorer](./resources/ie-code-run.JPG)
