@@ -18,8 +18,7 @@ We don’t need the npx prefix because npm automatically figures out the locatio
 that are part of any locally installed packages.
 
  - Run transform command
- <br />
- `npm run compile`
+`npm run compile`
  <br />
  After this, if you run npm start again to start the server
 
@@ -66,8 +65,8 @@ changes for using the -w option. Since all the server files are going to be in t
 ...
  "scripts": {
  <del>"start": "node server/server.js",</del>
- <b>"start": "nodemon -w server server/server.js"</b>
- <b>"compile": "babel src --out-dir public",</b>
+ <mark>"start": "nodemon -w server server/server.js"</mark>
+ <mark>"compile": "babel src --out-dir public",</mark>
  <b>"watch": "babel src --out-dir public --watch --verbose",</b>
  "test": "echo \"Error: no test specified\" && exit 1"
  },
