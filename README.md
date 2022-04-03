@@ -61,7 +61,7 @@ changes for using the -w option. Since all the server files are going to be in t
  ```
 
   > The final set of scripts added or changed in package.json 
-```js
+```jsx
 <pre>
 ...
  "scripts": {
