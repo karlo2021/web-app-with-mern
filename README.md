@@ -13,14 +13,16 @@ These classes can then be reused within other components, handle events, and so 
 
  - Let’s change the Hello World example from a simple element to use a React class
   <br />
- ```
+```
   class HelloWorld extends React.Component{
     ...
   }
   ...
- ```
- > within this class, a render() method is needed, which should return an element
 ```
+ > within this class, a render() method is needed, which should return an element
+
+```html
+<pre>
 ...
 render(){
   return (
@@ -29,6 +31,7 @@ render(){
     </div>
   );
 ...
+<pre>
 ```
  > move all the code for message construction to within the render() function
  > so that it remains encapsulated within the scope where it is needed rather than polluting 
