@@ -9,7 +9,7 @@ Apart from being able to start the project using npm start, npm has the ability 
 
  - Add a script called compile whose command line is the Babel command line to do all transforms
 
-```
+```js
 ...
  "compile": "babel src --out-dir public",
 ...
@@ -54,14 +54,14 @@ The best practice is to use nodemon during development (where watching for chang
 package.json. The command nodemon also needs an option to indicate which files or directory to watch
 changes for using the -w option. Since all the server files are going to be in the directory called server, we can use **-w server** to make nodemon restart Node.js when any file in that directory changes. <br />
  > new command for the start script within package.json will now be
- ```
+ ```js
  ...
  "start": "nodemon -w server server/server.js"
  ...
  ```
 
   > The final set of scripts added or changed in package.json 
-```html
+```js
 <pre>
 ...
  "scripts": {
