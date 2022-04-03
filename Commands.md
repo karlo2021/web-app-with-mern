@@ -34,7 +34,11 @@ or specific version
 
 ## start your application
 
-`npm run watch`
+```
+npm install express@4
+npm run watch
+npm run start
+```
 
 ## open browser, paste one of following links
 
