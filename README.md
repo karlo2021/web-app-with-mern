@@ -61,7 +61,7 @@ changes for using the -w option. Since all the server files are going to be in t
  ```
 
   > The final set of scripts added or changed in package.json 
-```jsx
+
 <pre>
 ...
  "scripts": {
@@ -73,7 +73,7 @@ changes for using the -w option. Since all the server files are going to be in t
  },
 ...
 </pre>
- ```
+
 <br />
  If you now run the new command using <b>npm run watch</b>, you will notice that it does one transform, but  it doesn’t return to the shell. It’s actually waiting in a permanent loop, watching for changes to the source files.
  So, to run the server, another terminal is needed, where npm start can be executed. 
