@@ -20,7 +20,8 @@ that are part of any locally installed packages.
  - Run transform command
 `npm run compile`
  <br />
- After this, if you run npm start again to start the server
+ After this, if you run npm start again to start the server, you can see any changes to App.jsx reflected in
+the application.
 
  <br />
  When we work on the client-side code and change the source files frequently, we have to manually
