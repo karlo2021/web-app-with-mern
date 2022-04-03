@@ -57,5 +57,5 @@ Hello World<br />
 
 `ReactDOM.render(element, document.GetElementById('content'));`
 
-By now you should be running npm run watch in a console and have started the server using npm start in a separate console. Thus, any changes to App.jsx should have been automatically compiled.
+By now you should be running <b>npm run</b> watch in a console and have started the server using <b>npm start</b> in a separate console. Thus, any changes to App.jsx should have been automatically compiled.
 
