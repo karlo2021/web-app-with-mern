@@ -30,7 +30,7 @@ recompile the source into JavaScript? Babel supports this out of the box via the
 
  > Add another script called **watch** with this additional option to the Babel command line:
 
-```
+```js
 ...
  "wathc": "babel src --out-dir public --watch --verbose"
 ...
@@ -48,7 +48,7 @@ The best practice is to use nodemon during development (where watching for chang
 
  > install nodemon
 
-`npm install nodemon@1`
+`npm install nodemon@2`
 
  let’s use nodemon to start the server instead of Node.js in the script specification for start in
 package.json. The command nodemon also needs an option to indicate which files or directory to watch
@@ -61,7 +61,7 @@ changes for using the -w option. Since all the server files are going to be in t
  ```
 
   > The final set of scripts added or changed in package.json 
-
+```html
 <pre>
 ...
  "scripts": {
@@ -73,6 +73,7 @@ changes for using the -w option. Since all the server files are going to be in t
  },
 ...
 </pre>
+ ```
 <br />
  If you now run the new command using <b>npm run watch</b>, you will notice that it does one transform, but  it doesn’t return to the shell. It’s actually waiting in a permanent loop, watching for changes to the source files.
  So, to run the server, another terminal is needed, where npm start can be executed. 
