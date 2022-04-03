@@ -7,8 +7,7 @@ extended from **React.Component** <br />
 React classes are used to create real components <br />
 These classes can then be reused within other components, handle events, and so much more. <br />
  > React classes are created by extending React.Component
-<br />Render() method is what React calls when it needs to display the component in the UI.
-<br />
+ > Render() method is what React calls when it needs to display the component in the UI
  > render() function returns an element (native HTML element such as a <div> or an instance of 
  > another React component).
 <br />
@@ -20,16 +19,16 @@ These classes can then be reused within other components, handle events, and so 
   ...
  ```
  > within this class, a render() method is needed, which should return an element
-  ```
-   ...
-   render(){
-     return (
-       <div title='Outer div'>
-         <h1>{message}</h1>
-       </div>
-     );
-   ...
-  ```
+```
+...
+render(){
+  return (
+    <div title='Outer div'>
+      <h1>{message}</h1>
+    </div>
+  );
+...
+```
  > move all the code for message construction to within the render() function
  > so that it remains encapsulated within the scope where it is needed rather than polluting 
  > global namespace
