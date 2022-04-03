@@ -35,7 +35,7 @@ render(){
  > so that it remains encapsulated within the scope where it is needed rather than polluting 
  > global namespace
 
-```
+```js
 ...
 render(){
   const continents = ["Africa","America","Asia","Australia","Europe"];
