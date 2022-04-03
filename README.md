@@ -3,9 +3,7 @@
 ## React Classes
 
 Let’s change the Hello World example from a simple element to use a React class called HelloWorld,
-extended from **React.Component** <br />
-React classes are used to create real components <br />
-These classes can then be reused within other components, handle events, and so much more. <br />
+extended from **React.Component**. React classes are used to create real components. These classes can then be reused within other components, handle events, and so much more. <br />
  > React classes are created by extending React.Component
  > Render() method is what React calls when it needs to display the component in the UI
  > render() function returns an element (native HTML element such as a div or an instance of 
@@ -13,7 +11,7 @@ These classes can then be reused within other components, handle events, and so 
 
  - Let’s change the Hello World example from a simple element to use a React class
   
-```html
+```js
   class HelloWorld extends React.Component{
     ...
   }
