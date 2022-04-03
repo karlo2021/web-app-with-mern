@@ -50,12 +50,12 @@ render(){
 JSX element is now returned from the render() method of the component class called
 Hello World<br />
  > an instance of the HelloWorld class can be created like this:
-<br />
- `const element = <HelloWorld />;`
 
- > at last render the component
+`const element = <HelloWorld />;`
+
 <br />
- `ReactDOM.render(element, document.GetElementById('content'));`
+ > at last render the component
+`ReactDOM.render(element, document.GetElementById('content'));`
 <br />
 By now you should be running npm run watch in a console and have started the server using npm start in a separate console. Thus, any changes to App.jsx should have been automatically compiled.
 
