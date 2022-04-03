@@ -12,7 +12,7 @@ These classes can then be reused within other components, handle events, and so 
  > another React component).
 
  - Let’s change the Hello World example from a simple element to use a React class
-  <br />
+  
 ```html
   class HelloWorld extends React.Component{
     ...
