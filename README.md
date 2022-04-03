@@ -8,10 +8,11 @@ React classes are used to create real components <br />
 These classes can then be reused within other components, handle events, and so much more. <br />
  > React classes are created by extending React.Component
  > Render() method is what React calls when it needs to display the component in the UI
- > render() function returns an element (native HTML element such as a <div> or an instance of 
+ > render() function returns an element (native HTML element such as a div or an instance of 
  > another React component).
-<br />
- - Let’s change the Hello World example from a simple element to use a React class <br />
+
+ - Let’s change the Hello World example from a simple element to use a React class
+  <br />
  ```
   class HelloWorld extends React.Component{
     ...
