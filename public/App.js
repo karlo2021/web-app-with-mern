@@ -51,5 +51,4 @@ var HelloWorld = /*#__PURE__*/function (_React$Component) {
 }(React.Component);
 
 var element = /*#__PURE__*/React.createElement(HelloWorld, null);
-ReactDOM.render(element, document.getElementById('contents'));
-ReactDOM.render(element, document.getElementById('content'));
+ReactDOM.render(element, document.getElementById('context'));
