@@ -5,7 +5,8 @@
 It should be possible to pass different input data from a parent component to a child component and make it render differently on different instances.
 
  > In the Issue Tracker application, one such component that can be instantiated with different
- > inputs is a table-row showing an individual issue. Depending on the inputs (an issue), the row  > can display different data
+ > inputs is a table-row showing an individual issue. Depending on the inputs (an issue), the row
+ > can display different data
 
 <img src="./resources/issue-table.JPG" width="325" height="340" >
 
@@ -36,7 +37,7 @@ class IssueTable extends React.Component{
  - Note
  > JSX does not support comments natively. In order to add comments, a JavaScript snippet has to be
  > added that has JavaScript style comments. Thus, the form {/*...*/} can be used to place  
- > comments within JSX. Using HTML style comments like <!-- ... --> will not work.
+ > comments within JSX. Using HTML style comments like `<!-- ... -->` will not work.
  > Way to switch to the JavaScript world within any JSX snippet is to use curly braces
 <br />
 The easiest way to pass data to child components is using an attribute when instantiating a component.
