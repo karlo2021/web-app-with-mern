@@ -33,7 +33,7 @@ class IssueTable extends React.Component{
 ...
 ```
 
- ul Note
+ - Note
  > JSX does not support comments natively. In order to add comments, a JavaScript snippet has to be
  > added that has JavaScript style comments. Thus, the form {/*...*/} can be used to place  
  > comments within JSX. Using HTML style comments like <!-- ... --> will not work.
@@ -72,7 +72,7 @@ class IssueRow extends React.Component{
             </tr>
         );
     }
-    
+  ...
 }
 ```
 
@@ -101,7 +101,7 @@ This can be passed on to the IssueRow
 
 Note that we are not using string-like quotes for the Issue ID since it is a number or for rowStyle since it is an object.
 
- ul Modified IssueTable component class
+ - Modified IssueTable component class
 
 ```js
 class IssueTable extends React.Component{
