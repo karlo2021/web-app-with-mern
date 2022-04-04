@@ -37,10 +37,10 @@ class IssueTable extends React.Component{
  > JSX does not support comments natively. In order to add comments, a JavaScript snippet has to be
  > added that has JavaScript style comments. Thus, the form {/* ... */} can be used to place  
  > comments within JSX. Using HTML style comments like <!-- ... --> will not work.
-<br />
  > Way to switch to the JavaScript world within any JSX snippet is to use curly braces
 <br />
 The easiest way to pass data to child components is using an attribute when instantiating a component.
+<br />
 ```js
 ...
 <IssueRow issue_title="Title of the first issue" />
@@ -48,6 +48,7 @@ The easiest way to pass data to child components is using an attribute when inst
 ```
 We used the name issue_title rather than simply title to avoid a confusion between this custom
 attribute and the HTML title attribute. Now, within the render() method of the child, the attribute’s value can be accessed via a special object variable called props, which is available via the this accessor. For example, this is how the value of issue_title can be displayed within a cell in the IssueRow component:
+<br />
 ```js
 ...
 <td>{this.props.issue_title}</td>
@@ -74,8 +75,8 @@ Now that we have an IssueRow component receiving the properties, let’s pass th
 IssueTable. Style we need to pass on has a special convention of specification in React and JSX.
 Rather than a CSS kind of string, React needs it to be specified as an **object** with a specific convention containing a series of JavaScript key-value pairs.
  > The keys are the same as the CSS style name, except that instead of dashes (like border-collapse)> they are camel cased (like borderCollapse)
- > > There is also a special shorthand for specifying pixel values; you can just use a number 
- > > (like 4) instead of a string "4px".
+ >> There is also a special shorthand for specifying pixel values; you can just use a number 
+ >> (like 4) instead of a string "4px".
 
 ```js
 ...
