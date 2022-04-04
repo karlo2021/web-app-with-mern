@@ -36,7 +36,7 @@ class IssueTable extends React.Component{
 
  - Note
  > JSX does not support comments natively. In order to add comments, a JavaScript snippet has to be
- > added that has JavaScript style comments. Thus, the form {/*...*/} can be used to place  
+ > added that has JavaScript style comments. Thus, the form ==marked==`{/*...*/}`==marked== can be used to place  
  > comments within JSX. Using HTML style comments like `<!-- ... -->` will not work.
  > Way to switch to the JavaScript world within any JSX snippet is to use curly braces
 <br />
