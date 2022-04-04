@@ -7,7 +7,7 @@ It should be possible to pass different input data from a parent component to a 
  > In the Issue Tracker application, one such component that can be instantiated with different
  > inputs is a table-row showing an individual issue. Depending on the inputs (an issue), the row  > can display different data
 
-![Issue-List-UI](./resources/issue-table.JPG)
+<img src="./resources/issue-table.JPG" width="325" height="340" >
 
 So, let’s create a component called IssueRow, and then use this multiple times within IssueTable,
 passing in different data to show different issues, like this:
