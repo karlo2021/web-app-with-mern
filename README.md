@@ -50,7 +50,7 @@ need to be referred to as this.props.children, like this:
 
  - App.jsx: Using Children Instead of Props
 
-<pre>
+```js
 ...
 class IssueRow extends React.Component{
   ...
@@ -69,10 +69,10 @@ class IssueTable extends React.Component{
   ...
     ...
       <tbody>
-        <del><IssueRow rowStyle={rowStyle} issue_id={1}
+        `<del><IssueRow rowStyle={rowStyle} issue_id={1}
           issue_title="Error when clicking add" />
         <IssueRow rowStyle={rowStyle} issue_id={2}
-          issue_title="Missing bottom border on panel" /></del>
+          issue_title="Missing bottom border on panel" /></del>`
         <IssueRow rowStyle={rowStyle} issue_id={1}>
           Error in console when clicking Add
         </IssueRow>
@@ -82,4 +82,4 @@ class IssueTable extends React.Component{
       </tbody>
     ...
 }
-</pre>
+```js
