@@ -23,7 +23,7 @@ class BorderWrap extends React.Component{
 
  > Then, during the rendering, any component could be wrapped with a padded border like this:
 
-```
+```js
 ...
   <BorderWrap>
     <ExampleComponent />
@@ -46,40 +46,4 @@ need to be referred to as this.props.children, like this:
 ...
   <td style={borderStyle}>{this.prop.children}</td>
 ...
-```
-
- - App.jsx: Using Children Instead of Props
-
-```html
-...
-class IssueRow extends React.Component{
-  ...
-    return(
-      <tr>
-        <td style={style}>{this.props.issue_id}</td>
-        ~~<td style={style}>{this.props.issue_title}</td>~~
-        **<td style={style}>{this.props.children}</td>**
-      </tr>
-    );
-  ...
-}
-...
-...
-class IssueTable extends React.Component{
-  ...
-    ...
-      <tbody>
-        ~~<IssueRow rowStyle={rowStyle} issue_id={1}
-          issue_title="Error when clicking add" />
-        <IssueRow rowStyle={rowStyle} issue_id={2}
-          issue_title="Missing bottom border on panel" />~~
-        <IssueRow rowStyle={rowStyle} issue_id={1}>
-          Error in console when clicking Add
-        </IssueRow>
-        <IssueRow rowStyle={rowStyle} issue_id={2}>
-          Missing bottom border on panel
-        </IssueRow>
-      </tbody>
-    ...
-}
 ```
