@@ -1,49 +1,123 @@
 # NodeJs
 
-## Passing data using children
+## Dynamic Composition
 
-There is another way to pass data to other components, using the contents of the HTML-like node of the component. In the child component, this can be accessed using a special field of this.props called this.props.children.
-Just like in regular HTML, React components can be nested. In such cases, the JSX expression will need to include both the opening and closing tags, with child elements nested in them.
-When the parent React component renders, the children are not automatically under it. React lets the parent component access the children element using this.props.children and lets the parent component determine where it needs to be displayed.
+In this section, we’ll replace our hard-coded set of IssueRow components with a programmatically generated set of components from an array of issues.
+Expand the scope of the issue from just an ID and a title to include as many fields of an issue
+as we can
 
- > wrapper `<div>` that adds a border and a padding can be defined like this:
+ > App.jsx: In-Memory Array of Issues
 
 ```js
-class BorderWrap extends React.Component{
-  render(){
-    const borderStyle = {border: "1px solid silver", padding: 6};
-    return(
-      <div style={borderStyle}>
-        {this.props.children}
-      </div>
-    );
-  }
+const issues = [
+  {
+    id: 1, status: 'New', owner: 'Ravan', efforts: 5,
+    creadted: new Date('2022-03-15'), due: unified,
+    title: 'Error in console when clicking Add'
+  },
+  {
+    id: 2, status: 'Assigned', owner: 'Eddie', efforts: 15,
+    creadted: new Date('2022-04-05'), due: new Date('2022-04-19'),
+    title: 'Missing bottom border on panel'
+  },
+];
+```
+
+Modify the IssueTable class to use this array of issues rather than the hard-coded list
+Within the IssueTable class’ render() method, let’s iterate over the array of issues and generate an array of IssueRows from it.
+
+```js
+...
+const issueRows = issue.map(issue => <IssueRow rowStyle={rowStyle} issue={issue} />);
+...
+```
+
+Replace the two hard-coded issue components inside IssueTable with this variable within the `<tbody>` element like this:
+
+```js
+...
+  <tbody>
+    {issueRows}
+  </tbody>
+...
+```
+
+Specifying the style for each cell is becoming tedious, so let’s create a class for the table, name it table-bordered, and use CSS to style the table and each table-cell. This stylewill need to be part of index.html
+
+<pre>
+...
+  <script src="https://unpkg.com/@babel/polyfill@7/dist/polyfill.min.js"></script>
+  <style>
+    table.bordered-table th, td{border: "1px solid black"; padding: 4;}
+    table.bordered-table{border-collapse: collapse;}
+  </style>
+</head>
+...
+</pre>
+
+Now, we can remove rowStyle from all the table-cells and table-headers  
+
+## Identify each instance of IssueRow with an attribute called key
+
+The value of this key can be
+anything, but it has to uniquely identify a row. We can use the ID of the issue as the key, as it uniquely identifies the row.
+
+ > App.jsx: IssueTable Class with IssueRows Dynamically Generated and Modified Header
+
+```js
+class TableIssue extends React.Component{
+    render(){
+      const issueRows = issues.map(issue => 
+      <IssueRow key={issue.id} issue={issue} />
+      );
+
+      return(
+        <table className="bordered-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Status</th>
+              <th>Owner</th>
+              <th>Created</th>
+              <th>Effort</th>
+              <th>Due Date</th>
+              <th>Title</th>
+            </tr>
+          </thead>
+          <tbody>
+            {issueRows}
+          </tbody>
+        </table>
+      );
+    }
 }
 ```
 
- > Then, during the rendering, any component could be wrapped with a padded border like this:
+Since React does not automatically call toString() on objects that are to be displayed, the dates have to be explicitly converted to strings. The toString() method results in a long string, so let’s use toDateString() instead.optional, we need to also check for its presence before calling toDateString() on it. Since the field due is optional, we need to also check for its presence before calling <mark>toDateString()</mark> on it. An easy way to do this is to use the ternary ? -:
 
 ```js
-...
-  <BorderWrap>
-    <ExampleComponent />
-  </BorderWrap>
-...
+  issue.due ? issue.due.ToDateString() : ''
 ```
 
-Thus, instead of passing the issue title as a property to IssueRow, this technique could be used to embed it as the child contents of `<IssueRow>` like this:
+The ternary operator is handy because it is a JavaScript expression, and it can be used directly in place of the display string. Otherwise, to use an if-then-else statement, the code would have to be outside the JSX part, in the beginning of the render() method implementation.
+The new IssueRow class is
 
 ```js
-...
-  <IssueRow issue_id={1}>Error in console when clicking add!</IssueRow>
-...
-```
-
-Now, within the render() method of IssueRow, instead of referring to this.props.issue_title, it will
-need to be referred to as this.props.children, like this:
-
-```html
-...
-  <td style={borderStyle}>{this.prop.children}</td>
-...
+class IssueRow extends React.Component{
+  render(){
+    cosnt issue = this.props.issue;
+    
+    return(
+      <tr>
+        <td>{issue.id}</td>
+        <td>{issue.status}</td>
+        <td>{issue.owner}</td>
+        <td>{issue.created.ToDateString()}</td>
+        <td>{issue.effort}</td>
+        <td>{issue.due ? issue.due.ToDateString() : ''}</td>
+        <td>{issue.title}</td>
+      </tr>
+    );
+  }
+}
 ```
