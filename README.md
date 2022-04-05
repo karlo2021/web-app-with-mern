@@ -50,7 +50,7 @@ need to be referred to as this.props.children, like this:
 
  - App.jsx: Using Children Instead of Props
 
-```json
+```html
 ...
 class IssueRow extends React.Component{
   ...
