@@ -57,8 +57,8 @@ class IssueRow extends React.Component{
     return(
       <tr>
         <td style={style}>{this.props.issue_id}</td>
-        <del><td style={style}>{this.props.issue_title}</td></del>
-        <b><td style={style}>{this.props.children}</td></b>
+        ---<td style={style}>{this.props.issue_title}</td>---
+        **<td style={style}>{this.props.children}</td>**
       </tr>
     );
   ...
@@ -69,10 +69,10 @@ class IssueTable extends React.Component{
   ...
     ...
       <tbody>
-        <IssueRow rowStyle={rowStyle} issue_id={1}
+        ---<IssueRow rowStyle={rowStyle} issue_id={1}
           issue_title="Error when clicking add" />
         <IssueRow rowStyle={rowStyle} issue_id={2}
-          issue_title="Missing bottom border on panel" />
+          issue_title="Missing bottom border on panel" />---
         <IssueRow rowStyle={rowStyle} issue_id={1}>
           Error in console when clicking Add
         </IssueRow>
