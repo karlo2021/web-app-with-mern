@@ -31,14 +31,14 @@ If you look at the output directory public, you will see that there is a new fil
 
 Now, we will need to change the reference in index.html to reflect the new extension and remove the script type specification since it is pure JavaScript. Further, we'll no longer need the runtime transformer to be loaded in index.html, so we can get rid of the babel-core script library specification. 
 
-<pre>html
+<pre>
 ...
  <del><script src="https://unpkg.com/@babel/standalone@7/babel.min.js"></script></del>
 ...
  <body>
  <div id="contents"></div>
  <del><script src="/App.jsx" type="text/babel"></script></del>
- <script src="/App.js"></script>
+ <mark><script src="/App.js"></script><mark>
  `</body>`
 ...
 </pre>
