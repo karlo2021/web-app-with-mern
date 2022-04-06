@@ -1,5 +1,3 @@
-# NodeJs
-
 ## Composing Components
 
 It’s possible to build a component that uses other user-defined components. Component composition is one
