@@ -35,7 +35,7 @@ To create the React element, the `createElement()` function of the React module 
  
 The <b>type</b> can be any HTML tag such as the string 'div', or a React component, <b>props</b> is an object containing HTML attributes or custom component properties. The last parameter(s) is zero or more children elements, which again are created using the createElement() function itself.
  
- For the Hello World application, let’s create a very simple nested element—a <div> with a title attribute that contains a heading with the words “Hello World!”, which will go inside a <script> tag within the body:
+ For the Hello World application, let’s create a very simple nested element `<div>` with a title attribute that contains a heading with the words “Hello World!”, which will go inside a <script> tag within the body:
  
 ```js
 ... 
@@ -46,7 +46,7 @@ The <b>type</b> can be any HTML tag such as the string 'div', or a React compone
  
 Note that this is not yet the real DOM, which is in the browser’s memory and that is why it is called a virtual DOM. Each of these React elements needs to be transferred to the real DOM. The ReactDOM does this when the <b>ReactDOM.render()</b> function is called. This function takes in as arguments the element that needs to be rendered and the DOM element that it needs to be placed under.
  
- We have a <div> that we created in the body, which is the target where the new element needs to be placed. We can get the parent's handle by calling <b>document.getElementByID()</b>, as we would have done using regular JavaScript.
+ We have a `<div>` that we created in the body, which is the target where the new element needs to be placed. We can get the parent's handle by calling <b>document.getElementByID()</b>, as we would have done using regular JavaScript.
  
 ```js
 ...
