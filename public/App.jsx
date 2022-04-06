@@ -1,5 +1,5 @@
 const element = (
-    <div type='Outer div'>
+    <div title='Outer div'>
         <h3>Hello World</h3>
     </div>
 );
