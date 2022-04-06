@@ -66,3 +66,20 @@ To start the server, run it using the Node.js runtime like this,:
 `node server.js`
 
 You should see a message saying the application has started on port 3000. Open your browser and type [http://localhost:3000/index.html](http://localhost:3000/index.html) in the URL bar. You should see the same `Hello World` 
+
+But what if we had a different starting point for the server? In fact, we want all the server-related files to go into a directory called server. So, let’s create that directory and move server.js into that directory. Now, if you run npm start, it will fail with an error. 
+
+In order to let npm know that the entry point for the server, an entry needs to be added to the scripts section of package.json
+
+<pre>
+...
+"main": "index.js",
+"scripts": {
+  <b>"start": "node server/server.js",</b>
+  "test": "echo \"Error: no test specified\" && exit 1",
+  },
+...
+<pre>
+
+Now, we can use `npm start`
+
