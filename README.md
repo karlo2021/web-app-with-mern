@@ -79,7 +79,7 @@ In order to let npm know that the entry point for the server, an entry needs to 
   "test": "echo \"Error: no test specified\" && exit 1",
   },
 ...
-<pre>
+</pre>
 
 Now, we can use `npm start`
 
