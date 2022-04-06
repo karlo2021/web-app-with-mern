@@ -9,7 +9,7 @@ It comes in two parts: the first is the <b>React</b> core module, the one that i
 
 These two libraries can be found in unpkg, a Content Delivery Network (CDN) that makes all open-source JavaScript libraries available online. 
 
-[React](https://unpkg.com/react@16/umd/react.development.js)
+[React](https://unpkg.com/react@16/umd/react.development.js) <br/>
 [ReactDOM](https://unpkg.com/react-dom@16/umd/react-dom.development.js)
 
 These two scripts can be included in the <head> section using <script> tags like this
