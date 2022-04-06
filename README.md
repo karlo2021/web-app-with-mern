@@ -58,3 +58,4 @@ The set of all changes to use the state to render the view of IssueTable
 </pre>
 
 Running and testing this piece of code should show no change in the application;
+[Expected-Output](./resources/output.JPG)
