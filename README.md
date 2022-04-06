@@ -1,6 +1,6 @@
 # NodeJs
 
-## seperate script file
+## Seperate script file
 
 In all the previous sections, the transformation of JSX to JavaScript happens at runtime. This is inefficient and quite unnecessary. Let’s instead move the transformation to the build stage in our development. As the first step, we need to separate out the JSX and JavaScript from the all-in-one index.html and
 refer to it as an external script. This way, we can keep the HTML as pure HTML and all the script that needs compilation in a separate file.
