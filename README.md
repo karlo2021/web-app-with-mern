@@ -1,6 +1,5 @@
-# NodeJs
 
-## older browser support
+## Older browser support
 
 JavaScript code will work in all modern browsers that support ES2015. The older browsers don’t support things like Arrow Functions and the Array.from() method.
 
