@@ -1,4 +1,3 @@
-# NodeJs
 
 ## Passing data using properties
 
