@@ -1,123 +1,60 @@
-# NodeJs
+# Initial State
 
-## Dynamic Composition
+Until now, we only saw static components, that is, components that did not change. To make components that respond to user input and other events, React uses a data structure called state in the component. The state essentially holds the data, something that can change, as opposed to the immutable properties in the form of props that you saw earlier. This state needs to be used in the render() method to build the view. It is only the change of state that can change the view. When data or the state changes, React automatically rerenders the view to show the new changed data.
 
-In this section, we’ll replace our hard-coded set of IssueRow components with a programmatically generated set of components from an array of issues.
-Expand the scope of the issue from just an ID and a title to include as many fields of an issue
-as we can
+The state of a component is captured in a variable called this.state in the component’s class. Other things, such as the size of the window, also can change, but this is not something that affects the DOM. Even though the display changes (for example, a line may wrap because the window is narrower), the change is handled by the browser directly based on the same DOM. So, we don’t need to capture this in the state of the component
 
- > App.jsx: In-Memory Array of Issues
-
-```js
-const issues = [
-  {
-    id: 1, status: 'New', owner: 'Ravan', efforts: 5,
-    creadted: new Date('2022-03-15'), due: unified,
-    title: 'Error in console when clicking Add'
-  },
-  {
-    id: 2, status: 'Assigned', owner: 'Eddie', efforts: 15,
-    creadted: new Date('2022-04-05'), due: new Date('2022-04-19'),
-    title: 'Missing bottom border on panel'
-  },
-];
-```
-
-Modify the IssueTable class to use this array of issues rather than the hard-coded list
-Within the IssueTable class’ render() method, let’s iterate over the array of issues and generate an array of IssueRows from it.
-
-```js
-...
-const issueRows = issue.map(issue => <IssueRow rowStyle={rowStyle} issue={issue} />);
-...
-```
-
-Replace the two hard-coded issue components inside IssueTable with this variable within the `<tbody>` element like this:
-
-```js
-...
-  <tbody>
-    {issueRows}
-  </tbody>
-...
-```
-
-Specifying the style for each cell is becoming tedious, so let’s create a class for the table, name it table-bordered, and use CSS to style the table and each table-cell. This stylewill need to be part of index.html
+Change the loop that creates the set of IssueRows to use the state variable called issues rather than the global array
 
 <pre>
 ...
-  <script src="https://unpkg.com/@babel/polyfill@7/dist/polyfill.min.js"></script>
-  <style>
-    table.bordered-table th, td{border: "1px solid black"; padding: 4;}
-    table.bordered-table{border-collapse: collapse;}
-  </style>
-</head>
+  const issueRows = <b>this.state.</b>issues.map(issue => 
+    <IssueRow key={issue.id} issue={issue} />
+  );
 ...
 </pre>
 
-Now, we can remove rowStyle from all the table-cells and table-headers  
-
-## Identify each instance of IssueRow with an attribute called key
-
-The value of this key can be
-anything, but it has to uniquely identify a row. We can use the ID of the issue as the key, as it uniquely identifies the row.
-
- > App.jsx: IssueTable Class with IssueRows Dynamically Generated and Modified Header
+We already have a global array of issues; let’s rename this array to initialIssues, just to make it explicit that it is only an initial set
 
 ```js
-class TableIssue extends React.Component{
+... 
+const initialIssues = [
+  ...
+];
+```
+
+Setting the initial state needs to be done in the constructor of the component. This can be done by
+simply assigning the variable <b>this.state</b> to the set of state variables and their values
+
+```js
+...
+this.state = { issues: initialIsuess };
+...
+```
+
+The set of all changes to use the state to render the view of IssueTable
+
+<pre>
+  ...
+  <del>const issues = [</del>
+  <b>const initialIssues = [</b>
+    {
+      id: 1, status: 'New', owner: 'Ravan', effort: 5,
+      created: new Date('2018-08-15'), due: undefined,
+    },
+  ...
+  class IssueTable extends React.Component{
+    <b>constructor(){
+      super();
+      this.state={issues: initialIssues };
+    }</b>
+
     render(){
-      const issueRows = issues.map(issue => 
-      <IssueRow key={issue.id} issue={issue} />
+      <del>const issueRows = issues.map(issue =>)</del>
+      <b>cosnt issueRows = this.state.issues.map(issue => </b> 
+        <IssueRow key={issue.id} issue={issue} />
       );
+    ...
+</pre>
 
-      return(
-        <table className="bordered-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Status</th>
-              <th>Owner</th>
-              <th>Created</th>
-              <th>Effort</th>
-              <th>Due Date</th>
-              <th>Title</th>
-            </tr>
-          </thead>
-          <tbody>
-            {issueRows}
-          </tbody>
-        </table>
-      );
-    }
-}
-```
-
-Since React does not automatically call toString() on objects that are to be displayed, the dates have to be explicitly converted to strings. The toString() method results in a long string, so let’s use toDateString() instead.optional, we need to also check for its presence before calling toDateString() on it. Since the field due is optional, we need to also check for its presence before calling <mark>toDateString()</mark> on it. An easy way to do this is to use the ternary ? -:
-
-```js
-  issue.due ? issue.due.ToDateString() : ''
-```
-
-The ternary operator is handy because it is a JavaScript expression, and it can be used directly in place of the display string. Otherwise, to use an if-then-else statement, the code would have to be outside the JSX part, in the beginning of the render() method implementation.
-The new IssueRow class is
-
-```js
-class IssueRow extends React.Component{
-  render(){
-    cosnt issue = this.props.issue;
-    
-    return(
-      <tr>
-        <td>{issue.id}</td>
-        <td>{issue.status}</td>
-        <td>{issue.owner}</td>
-        <td>{issue.created.ToDateString()}</td>
-        <td>{issue.effort}</td>
-        <td>{issue.due ? issue.due.ToDateString() : ''}</td>
-        <td>{issue.title}</td>
-      </tr>
-    );
-  }
-}
-```
+Running and testing this piece of code should show no change in the application;
