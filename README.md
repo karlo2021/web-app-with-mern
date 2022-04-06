@@ -33,13 +33,13 @@ Now, we will need to change the reference in index.html to reflect the new exten
 
 <pre>
 ...
- <del><script src="https://unpkg.com/@babel/standalone@7/babel.min.js"></script><del>
+ <del><script src="https://unpkg.com/@babel/standalone@7/babel.min.js"></script></del>
 ...
- <body>
- <div id="contents"></div
+ `<body>
+ <div id="contents"></div>`
  <del><script src="/App.jsx" type="text/babel"></script></del>
  <script src="/App.js"></script>
- </body>
+ `</body>`
 ...
 </pre>
 
