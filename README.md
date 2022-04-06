@@ -33,21 +33,3 @@ But the compiler also needs to be told which scripts have to be transformed. It 
  <script type="text/babel">
 ...
 ```
-
-Set of changes to use JSX 
-
-<pre>
- <del><script type="text/babel">
-   const element = React.createElement('div', {title: 'Outer div'},
-     React.createElement('h1', null, 'Hello World!')
-   );</del>
-   const element = (
-     <div title="Outer div">
-       <h1>Hello World!</h1>
-     </div>
-   );
-   
-   ReactDOM.render(element, document.getElementById('contents'));
- </script>
-
-</pre>
