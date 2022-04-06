@@ -81,5 +81,8 @@ In order to let npm know that the entry point for the server, an entry needs to 
 ...
 </pre>
 
+Note that there is also a field called main in package.json. When we initialized this file, the value of this field was set to index.js automatically. This field is not meant for indicating the starting point of the server. Instead, if the package was a module (as opposed to an application), index.js would have been the file to
+load when the project is imported as a module using require() in other projects. Since this project is not a module that can be imported in other projects, this field is not of any interest to us, and neither do we have index.js in the source code.
+
 Now, we can use `npm start`
 
