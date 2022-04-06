@@ -1,6 +1,5 @@
-# NodeJs
 
-## custom commands
+## Custom commands
 
 Apart from being able to start the project using npm start, npm has the ability to define other custom commands. This is especially useful when there are many command line parameters for the command.
 <br />
