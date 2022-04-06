@@ -14,8 +14,7 @@ Call this external script App.jsx and place it in the public directory, so that 
   ...
 ```
 
-Note that the script type text/babel continues to be needed, since the JSX compilation happens in the browser using the Babel library
-
-point your browser to [localhoost:3000](http://localhost:3000), you should see the same Hello World message. But we have only separated the files; we
+Note that the script type text/babel continues to be needed, since the JSX compilation happens in the browser using the Babel library.
+Point your browser to [localhoost:3000](http://localhost:3000), you should see the same Hello World message. But we have only separated the files; we
 have not moved the transform to build time. 
 
