@@ -38,8 +38,8 @@ Now, we will need to change the reference in index.html to reflect the new exten
  <body>
  <div id="contents"></div>
  <del><script src="/App.jsx" type="text/babel"></script></del>
- <mark><script src="/App.js"></script><mark>
- `</body>`
+ <mark><script src="/App.js"></script></mark>
+ </body>
 ...
 </pre>
 
