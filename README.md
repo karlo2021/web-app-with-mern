@@ -42,16 +42,16 @@ interest:
   > componentDidMount(): This method is called as soon as the component’s
   > representation has been converted and inserted into the DOM. A setState() can be
   > called within this methodx
-  > <br/>
+  > <br/><br />
   > componentDidUpdate(): This method is invoked immediately after an update occurs,
   > but it is not called for the initial render. this.setState() can be called within this
   > method. The method is also supplied the previous props and previous state as
   > arguments, so that the function has a chance to check the differences between the
   > previous props and state and the current props and state before taking an action
-  > <br />
+  > <br /><br />
   > componentWillUnmount(): This method is useful for cleanup such as cancelling
   > timers and pending network requests
-  > <br/>
+  > <br/><br />
   > shouldComponentUpdate(): This method can be used to optimize and prevent a
   > rerender in case there is a change in the props or state that really doesn’t affect the
   > output or the view. This method is rarely used
