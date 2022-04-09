@@ -42,16 +42,16 @@ interest:
   > <b>componentDidMount()</b>: This method is called as soon as the component’s
   > representation has been converted and inserted into the DOM. A setState() can be
   > called within this method 
-  <br/>
+  > <br/>
   > <b>componentDidUpdate()</b>: This method is invoked immediately after an update occurs,
   > but it is not called for the initial render. this.setState() can be called within this
   > method. The method is also supplied the previous props and previous state as
   > arguments, so that the function has a chance to check the differences between the
   > previous props and state and the current props and state before taking an action 
-  <br/>
+  > <br/>
   > <b>componentWillUnmount()</b>: This method is useful for cleanup such as cancelling
   > timers and pending network requests
-  <br/>
+  > <br/>
   > <b>shouldComponentUpdate()<b/>: This method can be used to optimize and prevent a
   > rerender in case there is a change in the props or state that really doesn’t affect the
   > output or the view. This method is rarely used
@@ -77,14 +77,14 @@ The complete set of changes in the IssueTable class is shown
       <del>this.state = { issues: initialIssues };</del>
       <b>this.state = { issues: [] };</b>
     }
-    <b>componentDidMount() {
-      this.loadData();
+    <b>componentDidMount() {</b>
+     <b>this.loadData();</b>
     }
-    loadData() {
-      setTimeout(()=>{
-      this.state({ issues: initialIssues });
-      }, 500);
-    }</b>
+    <b>loadData() {</b>
+      <b>setTimeout(()=>{</b>
+      <b>this.state({ issues: initialIssues });</b>
+      <b>}, 500);</b>
+    }
     ...
   }
 </pre>
