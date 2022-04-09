@@ -1,94 +1,106 @@
-# Async State Initialization
+# Updating State
 
-Although we set the initial state in the constructor, it is highly unlikely that regular SPA components will have the initial state available to them statically. These will typically be fetched from the server. The state can only be assigned a value in the constructor. After that, the state can be modified, but only via a call to React.Component’s `this.setState()` method
-
-```js
-...
- this.setState({ issues: newIssues });
-...
-```
-
-Since at the time of constructing the component, we don’t have the initial data, we will have to assign an empty array to the issues state variable in the constructor.
+You saw how to set the initial state, using a direct assignment in the constructor as
+well as setting a value in other lifecycle methods using `this.setState()`. Let’s add a method in IssueTable to add a new issue. This can take in as an argument an issue object, to which we’ll assign a new ID and set the creation date.
 
 ```js
 ...
-constructor() {
-  this.state({ issues: [] });
-...
-```
-
-The key difference between a global array of issues and a call to the server is that the latter needs an asynchronous call. Let’s add a method to the IssueTable class that asynchronously returns an array of issues. Eventually, we’ll replace this with an API call to the server, but for the moment, we’ll use a setTimeout() call to make it asynchronous.
-
-```js
-...
-  loadData(){
-    setTimeout(() => {
-      this.setState({ issue: initialState });
-    }, 500);
+  createIssue(issue) {
+    issue.id = this.state.issues.length + 1;
+    issue.created = new Date();
   }
+...
 ```
 
-The timeout value of 500 milliseconds is somewhat arbitrary: it’s reasonable to expect a real API call to
-fetch the initial list of issues within this time.
+Note that the state variable cannot be set directly, nor can it be mutated directly. That is, setting `this.state.issues` to a new value or modifying its elements is not allowed. The variable this.state in the component should always be treated as immutable. For example, the following should not be done:
 
-Now, it is very tempting to call loadData() within the constructor of IssueTable. It may even seem to
-work, but the fact is that the constructor only constructs the component and does not render the UI.
-
-React provides many other methods called lifecycle methods to cater to this and other situations where
-something needs to be done depending on the stage, or changes in the status of the component. Apart from
-the constructor and the render() methods, the following lifecycle methods of a component could be of
-interest:
-
-  > componentDidMount(): This method is called as soon as the component’s
-  > representation has been converted and inserted into the DOM. A setState() can be
-  > called within this methodx
-  > <br/><br />
-  > componentDidUpdate(): This method is invoked immediately after an update occurs,
-  > but it is not called for the initial render. this.setState() can be called within this
-  > method. The method is also supplied the previous props and previous state as
-  > arguments, so that the function has a chance to check the differences between the
-  > previous props and state and the current props and state before taking an action
-  > <br /><br />
-  > componentWillUnmount(): This method is useful for cleanup such as cancelling
-  > timers and pending network requests
-  > <br/><br />
-  > shouldComponentUpdate(): This method can be used to optimize and prevent a
-  > rerender in case there is a change in the props or state that really doesn’t affect the
-  > output or the view. This method is rarely used
-
-The best place to initiate the loading of data in this case is the `componentDidMount()` method. `componentDidUpdate()` is an option as well, but since it may not be called for the initial render, let’s not use it.
-
-```cs
+```js
 ...
-componentDidMount() {
-  this.loadData();
+this.state.issues.push(issue)   // incorrect!
+...
+```
+
+The only way to let React know something has changed, and to cause a rerender, is to call 
+`this.setState()`. Further, `this.setState()` may cause the changes that are done directly to the state
+variable to be overwritten. So, the following should not be done either:
+
+```js
+...
+issues = this.state.issues;
+issues.push(issue);       // same as this.state.issues.push(issue);
+this.setState({ issues });
+```
+
+It may seem to work, but it will have unexpected consequences in some of the lifecycle methods within this as well as descendent components. What is needed in the setState() call is a fresh array of issues, say a copy of the state variable. If anyexisting array element, say an issue itself, is changing, not only is the copy of the array needed, but also the copy of the object that is being changed is needed. 
+
+There are libraries called immutability helpers, such as immutable.js (http://facebook.github.io/immutable-js/), which can be used to construct the new state object. When a property of the object is modified, the library creates a copy optimally.
+
+We will only append an issue, and not change an existing issue. It’s fairly straightforward to make a
+shallow copy of the array, and this will suffice for the moment. So, we won’t be using the library. If, in your application, you find that you have to make lots of copies because of deep nesting of objects in the state, you could consider using `immutable.js`.
+
+The simple way to make a copy of an array is using the slice() method
+
+```js
+...
+issues = thisstate.issues.slice();
+```
+
+let’s just add a timer, on the expiry of which, a hard-coded sample issue will be appended to the list of issues. Let’s first declare this hard-coded sample issue object globally, right after the global initialIssues:
+
+```js
+...
+const sampleIssue = {
+  status: 'New', owner: 'Pieta',
+  title: 'Completion date should be optimal'
+};
+...
+```
+
+Let’s use this object in a call to createIssue(), after the expiry of a timer of two seconds, in the
+constructor of IssueTable:
+
+```js
+...
+createIssue() {
+  setTimeout(() => {
+    this.createIssue(sampleIssue);
+  }, 2000);
 }
 ...
 ```
 
-The complete set of changes in the IssueTable class is shown
+The final set of changes—for using a timer to append a sample issue to the list of issues
 
 <pre>
+...
+const initialIssues = [{
   ...
-  class IssueTable extends React.Component
-  {
-    constructor() {
-      super();
-      <del>this.state = { issues: initialIssues };</del>
-      <b>this.state = { issues: [] };</b>
-    }
-    <b>componentDidMount() {
-     this.loadData();
-    }
-    loadData() {
-      setTimeout(()=>{
-      this.state({ issues: initialIssues });
-      }, 500);</b>
-    }
-    ...
+}];
+<b>const sampleIssue = {
+  status: 'New', owner: 'Pieta',
+  title: 'Completion date should be optional',
+};</b>
+...
+class IssueTable extends React.Component{
+  constructor() {
+    super();
+    <b>this.state = { issues: [] };
+    setTimeout( ()=> {
+      this.createIssue(sampleIssue);
+    }, 2000);</b>
   }
+}
+...
+<b>createIssue(issue) {
+  issue.id = this.state.issues.length + 1;
+  issue.created = new Date();
+  const newIssueList = this.state.issues.split();
+  newIssueList.push(issue);
+  this.setState({ issues: newIssueList });
+}</b>
+... 
 </pre>
 
-If you refresh the browser you will find that the list of issues is displayed as it used to be in the previous steps. But, you will also see that for a fraction of a second after the page is loaded, the table is empty. It gets filled soon after, but still, there is a flicker. For the moment, let’s live with this minor UI unpleasantness.
+Refreshing the browser, you’ll see that there are two rows of issues to start with. After two seconds, a third row is added with a newly generated ID and the contents of the sample issue.
 
-![empty-table](./resources/empty-table.JPG)
+![expected-output](./resources/three-issues-table.JPG)
