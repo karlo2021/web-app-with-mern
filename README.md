@@ -52,7 +52,7 @@ interest:
   > <b>componentWillUnmount()</b>: This method is useful for cleanup such as cancelling
   > timers and pending network requests
   > <br/>
-  > <b>shouldComponentUpdate()<b/>: This method can be used to optimize and prevent a
+  > shouldComponentUpdate(): This method can be used to optimize and prevent a
   > rerender in case there is a change in the props or state that really doesn’t affect the
   > output or the view. This method is rarely used
 
