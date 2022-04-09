@@ -77,13 +77,13 @@ The complete set of changes in the IssueTable class is shown
       <del>this.state = { issues: initialIssues };</del>
       <b>this.state = { issues: [] };</b>
     }
-    <b>componentDidMount() {</b>
-     <b>this.loadData();</b>
+    <b>componentDidMount() {
+     this.loadData();
     }
-    <b>loadData() {</b>
-      <b>setTimeout(()=>{</b>
-      <b>this.state({ issues: initialIssues });</b>
-      <b>}, 500);</b>
+    loadData() {
+      setTimeout(()=>{
+      this.state({ issues: initialIssues });
+      }, 500);</b>
     }
     ...
   }
