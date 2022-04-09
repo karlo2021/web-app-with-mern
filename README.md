@@ -41,27 +41,17 @@ interest:
 
   > componentDidMount(): This method is called as soon as the component’s
   > representation has been converted and inserted into the DOM. A setState() can be
-<<<<<<< HEAD
-  > called within this method
-=======
-  > called within this method 
+  > called within this methodx
   > <br/>
->>>>>>> 5a02549ac2d5146d03f71a0dc24483660ec3e6b5
   > componentDidUpdate(): This method is invoked immediately after an update occurs,
   > but it is not called for the initial render. this.setState() can be called within this
   > method. The method is also supplied the previous props and previous state as
   > arguments, so that the function has a chance to check the differences between the
-<<<<<<< HEAD
   > previous props and state and the current props and state before taking an action
-  > componentWillUnmount(): This method is useful for cleanup such as cancelling
-  > timers and pending network requests
-=======
-  > previous props and state and the current props and state before taking an action 
-  > <br/>
+  > <br />
   > componentWillUnmount(): This method is useful for cleanup such as cancelling
   > timers and pending network requests
   > <br/>
->>>>>>> 5a02549ac2d5146d03f71a0dc24483660ec3e6b5
   > shouldComponentUpdate(): This method can be used to optimize and prevent a
   > rerender in case there is a change in the props or state that really doesn’t affect the
   > output or the view. This method is rarely used
@@ -98,10 +88,7 @@ The complete set of changes in the IssueTable class is shown
     ...
   }
 </pre>
-<<<<<<< HEAD
 
 If you refresh the browser you will find that the list of issues is displayed as it used to be in the previous steps. But, you will also see that for a fraction of a second after the page is loaded, the table is empty. It gets filled soon after, but still, there is a flicker. For the moment, let’s live with this minor UI unpleasantness.
 
 ![empty-table](./resources/empty-table.JPG)
-=======
->>>>>>> 5a02549ac2d5146d03f71a0dc24483660ec3e6b5
