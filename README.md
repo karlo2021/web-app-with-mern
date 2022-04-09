@@ -88,3 +88,7 @@ The complete set of changes in the IssueTable class is shown
     ...
   }
 </pre>
+
+If you refresh the browser you will find that the list of issues is displayed as it used to be in the previous steps. But, you will also see that for a fraction of a second after the page is loaded, the table is empty. It gets filled soon after, but still, there is a flicker. For the moment, let’s live with this minor UI unpleasantness.
+
+![empty-table](./resources/empty-table.JPG)
