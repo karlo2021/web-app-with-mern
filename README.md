@@ -1,61 +1,40 @@
-# Initial State
+# Async State Initialization
 
-Until now, we only saw static components, that is, components that did not change. To make components that respond to user input and other events, React uses a data structure called state in the component. The state essentially holds the data, something that can change, as opposed to the immutable properties in the form of props that you saw earlier. This state needs to be used in the <b>render()</b> method to build the view. It is only the change of state that can change the view. When data or the state changes, React automatically rerenders the view to show the new changed data.
-
-The state of a component is captured in a variable called this.state in the component’s class. Other things, such as the size of the window, also can change, but this is not something that affects the DOM. Even though the display changes (for example, a line may wrap because the window is narrower), the change is handled by the browser directly based on the same DOM. So, we don’t need to capture this in the state of the component
-
-Change the loop that creates the set of IssueRows to use the state variable called issues rather than the global array
-
-<pre>
-...
-  const issueRows = <b>this.state.</b>issues.map(issue => 
-    <IssueRow key={issue.id} issue={issue} />
-  );
-...
-</pre>
-
-We already have a global array of issues; let’s rename this array to initialIssues, just to make it explicit that it is only an initial set
-
-```js
-... 
-const initialIssues = [
-  ...
-];
-```
-
-Setting the initial state needs to be done in the constructor of the component. This can be done by
-simply assigning the variable <b>this.state</b> to the set of state variables and their values
+Although we set the initial state in the constructor, it is highly unlikely that regular SPA components will have the initial state available to them statically. These will typically be fetched from the server. The state can only be assigned a value in the constructor. After that, the state can be modified, but only via a call to React.Component’s `this.setState()` method
 
 ```js
 ...
-this.state = { issues: initialIsuess };
+ this.setState({ issues: newIssues });
 ...
 ```
 
-The set of all changes to use the state to render the view of IssueTable
+Since at the time of constructing the component, we don’t have the initial data, we will have to assign an empty array to the issues state variable in the constructor.
 
-<pre>
-  ...
-  <del>const issues = [</del>
-  <b>const initialIssues = [</b>
-    {
-      id: 1, status: 'New', owner: 'Ravan', effort: 5,
-      created: new Date('2018-08-15'), due: undefined,
-    },
-  ...
-  class IssueTable extends React.Component{
-    <b>constructor(){
-      super();
-      this.state={issues: initialIssues };
-    }</b>
+```js
+...
+constructor() {
+  this.state({ issues: [] });
+...
+```
 
-    render(){
-      <del>const issueRows = issues.map(issue =>)</del>
-      <b>cosnt issueRows = this.state.issues.map(issue => </b> 
-        <IssueRow key={issue.id} issue={issue} />
-      );
-    ...
-</pre>
+The key difference between a global array of issues and a call to the server is that the latter needs an asynchronous call. Let’s add a method to the IssueTable class that asynchronously returns an array of issues. Eventually, we’ll replace this with an API call to the server, but for the moment, we’ll use a setTimeout() call to make it asynchronous.
 
-Running and testing this piece of code should show no change in the application;
-![Expected-Output](./resources/output.JPG)
+```js
+...
+  loadData(){
+    setTimeout(() => {
+      this.setState({ issue: initialState });
+    }, 500);
+  }
+```
+
+The timeout value of 500 milliseconds is somewhat arbitrary: it’s reasonable to expect a real API call to
+fetch the initial list of issues within this time.
+
+Now, it is very tempting to call loadData() within the constructor of IssueTable. It may even seem to
+work, but the fact is that the constructor only constructs the component and does not render the UI. 
+
+React provides many other methods called lifecycle methods to cater to this and other situations where
+something needs to be done depending on the stage, or changes in the status of the component. Apart from
+the constructor and the render() methods, the following lifecycle methods of a component could be of
+interest:
