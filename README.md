@@ -39,20 +39,17 @@ something needs to be done depending on the stage, or changes in the status of t
 the constructor and the render() methods, the following lifecycle methods of a component could be of
 interest:
 
-  > <b>componentDidMount()</b>: This method is called as soon as the component’s
+  > componentDidMount(): This method is called as soon as the component’s
   > representation has been converted and inserted into the DOM. A setState() can be
-  > called within this method 
-  <br/>
-  > <b>componentDidUpdate()</b>: This method is invoked immediately after an update occurs,
+  > called within this method
+  > componentDidUpdate(): This method is invoked immediately after an update occurs,
   > but it is not called for the initial render. this.setState() can be called within this
   > method. The method is also supplied the previous props and previous state as
   > arguments, so that the function has a chance to check the differences between the
-  > previous props and state and the current props and state before taking an action 
-  <br/>
-  > <b>componentWillUnmount()</b>: This method is useful for cleanup such as cancelling
+  > previous props and state and the current props and state before taking an action
+  > componentWillUnmount(): This method is useful for cleanup such as cancelling
   > timers and pending network requests
-  <br/>
-  > <b>shouldComponentUpdate()<b/>: This method can be used to optimize and prevent a
+  > shouldComponentUpdate(): This method can be used to optimize and prevent a
   > rerender in case there is a change in the props or state that really doesn’t affect the
   > output or the view. This method is rarely used
 
