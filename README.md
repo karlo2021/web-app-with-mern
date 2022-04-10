@@ -90,6 +90,7 @@ function IssueTable(props) {
         <tr>
           <th>ID</th>
           <th>Status</th>
+          <th>Owner</th>
           <th>Created</th>
           <th>Effort</th>
           <th>Due</th>
