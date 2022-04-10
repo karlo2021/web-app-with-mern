@@ -73,3 +73,7 @@ const sampleIssue = {
 </pre>
 
 ![expected-output](./resources/expected-output.JPG)
+
+Component hierarchy and data flow after lifting state up
+
+![html-schema](./resources/task-list.JPG)
