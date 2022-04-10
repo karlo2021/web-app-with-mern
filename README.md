@@ -76,4 +76,4 @@ const sampleIssue = {
 
 Component hierarchy and data flow after lifting state up
 
-![html-schema](./resources/task-list.JPG)
+<img src="./resources/task-list.JPG" width="500" height="390"><br />
