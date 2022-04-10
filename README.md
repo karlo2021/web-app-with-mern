@@ -27,3 +27,13 @@ constructor() {
 </pre>
 
 At this point, clicking Add will submit the form and fetch the same screen again. That’s not what we want. Firstly, we want it to call createIssue() using the values in the owner and title fields. Secondly, we want to prevent the form from being submitted because we will handle the event ourselves.
+We’ll create a class method called `handleSubmit()` to receive the submit event from the form whenthe Add button is clicked.
+
+```js
+...
+  <form name="issueAdd" onSubmit={handleSubmit} >
+  ...
+```
+
+Now, we can implement the method `handleSubmit()` in IssueAdd. This method receives the event that triggered the submit as an argument. In order to prevent the form from being submitted when the Add button is clicked, we need to call the `preventDefault()` function on the event. Then, using the form handle via documents.forms.issueAdd, we can get the values of the text input fields. Using these, we’ll create a new issue by calling `createIssue()`.
+
