@@ -30,8 +30,8 @@ class IssueList extends React.Component{
 
 Now, IssueTable doesn’t have a state to construct the IssueRow components from. But you have already seen how data can be passed in from a parent to a child in the form of props. Let’s use that strategy and pass the array of issues from the state within IssueList to IssueTable via props:
 
-<pre>
+```js
 ...
-  <IssueTable <b>issues={this.state.issues}</b> />
+  <IssueTable issues={this.state.issues} />
 ...
-</pre>
+```
