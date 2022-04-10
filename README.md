@@ -70,6 +70,6 @@ const sampleIssue = {
  title: 'Completion date should be optional',
 };</del>
 ...
-<pre>
+</pre>
 
 ![expected-output](./resources/expected-output.JPG)
