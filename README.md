@@ -25,7 +25,7 @@ app.get('/hello', (req, res) => {
 
 ### Request Matching
 
-&nbsp;&nbsp; When a request is received, the first thing that Express does is match the request to one of the routes. The request method is matched against the route’s method. In the previous example, the route’s method is get() so any HTTP request using the GET method will match it. Further, the request URL is matched with the path specification, the first argument in the route, which is /hello. When a HTTP request matches this specification, the handler function is called. The route’s method and path need not be specific. If you want to match all HTTP methods, you could write app.all(). If you needed to match multiple paths, you could pass in an array of paths, or even a regular expression like '/*.do' will match any request ending with the extension .do. 
+&nbsp;&nbsp; When a request is received, the first thing that Express does is match the request to one of the routes. The request method is matched against the route’s method. In the previous example, the route’s method is get() so any HTTP request using the GET method will match it. Further, the request URL is matched with the path specification, the first argument in the route, which is /hello. When a HTTP request matches this specification, the handler function is called. The route’s method and path need not be specific. If you want to match all HTTP methods, you could write app.all(). If you needed to match multiple paths, you could pass in an array of paths, or even a regular expression like `'/*.do'` will match any request ending with the extension .do. 
 
 ### Route Parameters
 
@@ -39,3 +39,5 @@ app.get('/hello', (req, res) => {
 
 ### Route Lookup
 
+&nbsp;&nbsp; Multiple routes can be set up to match different URLs and patterns. The router does not try to find a best match; instead, it tries to match all routes in the order in which they are installed. The first match is used. So, if two routes are possible matches to a request, it will use the first defined one. So, the routes have to be defined in the order of priority. <br />
+Thus, if you add patterns rather than very specific paths, you should be careful to add the more generic pattern after the specific paths in case a request can match both. For example, if you want to match everything that goes under /api/, that is, a pattern like `/api/*`, you should add this route only after all the more specific routes that handle paths such as `/api/issues`.
