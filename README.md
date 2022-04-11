@@ -29,3 +29,13 @@ app.get('/hello', (req, res) => {
 
 ### Route Parameters
 
+&nbsp;&nbsp; Route parameters are named segments in the path specification that match a part of the URL. If a match occurs, the value in that part of the URL is supplied as a variable in the request object.
+
+`app.get('/coustomers/:coustomerId', ... );`
+
+&nbsp;&nbsp; The URL /customers/1234 will match the route specification, and so will /customers/4567. In either case, the customer ID will be captured and supplied to the handler function as part of the request in req. params, with the name of the parameter as the key. Thus, req.params.customerId will have the value 1234 or 4567 for each of these URLs, respectively.
+
+ >  The query string is not part of the path specification, so you cannot have different handlers for different parameters or values of the query string
+
+### Route Lookup
+
