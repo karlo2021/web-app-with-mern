@@ -1,6 +1,6 @@
 # Stateless Components
 
-We have three functioning React components (IssueAdd, IssueRow and IssueTable) composed hierarchically into IssueList. IssueList has lots of methods, a state, initialization of the state, and functions that modify the state. In comparison, IssueAdd has some interactivity, but no state. But, if you notice, IssueRow and IssueTable have nothing but a `render()` method.
+&nbsp;&nbsp; We have three functioning React components (IssueAdd, IssueRow and IssueTable) composed hierarchically into IssueList. IssueList has lots of methods, a state, initialization of the state, and functions that modify the state. In comparison, IssueAdd has some interactivity, but no state. But, if you notice, IssueRow and IssueTable have nothing but a `render()` method.
 
 For performance reasons and for clarity of code, it is recommended that such components are written as functions rather than classes. If a component does not depend on props, it can be written as a simple function whose name is the component name. For example, consider the following Hello World class we wrote in the beginning (React Components)
 
@@ -32,7 +32,7 @@ function HelloWorld() {
 ...
 ```
 
-If the rendering depends on the props alone (more often than not, this will indeed be the case), the function can be written with one argument as the props, which can be accessed within the function’s JSX body. Say the Hello World component takes in a message as part of the props
+&nbsp;&nbsp; If the rendering depends on the props alone (more often than not, this will indeed be the case), the function can be written with one argument as the props, which can be accessed within the function’s JSX body. Say the Hello World component takes in a message as part of the props
 
 ```js
 ...
@@ -46,7 +46,7 @@ function HelloWorld(props) {
 ...
 ```
 
-An even more concise form using an arrow function can be used when the rendered output can be represented as a JavaScript expression, that is, a function with no other statement than just the return statement:
+&nbsp;&nbsp; An even more concise form using an arrow function can be used when the rendered output can be represented as a JavaScript expression, that is, a function with no other statement than just the return statement:
 
 ```js
 ...
