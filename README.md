@@ -2,7 +2,7 @@
 
 &nbsp;&nbsp; We have three functioning React components (IssueAdd, IssueRow and IssueTable) composed hierarchically into IssueList. IssueList has lots of methods, a state, initialization of the state, and functions that modify the state. In comparison, IssueAdd has some interactivity, but no state. But, if you notice, IssueRow and IssueTable have nothing but a `render()` method.
 
-For performance reasons and for clarity of code, it is recommended that such components are written as functions rather than classes. If a component does not depend on props, it can be written as a simple function whose name is the component name. For example, consider the following Hello World class we wrote in the beginning (React Components)
+&nbsp;&nbsp; For performance reasons and for clarity of code, it is recommended that such components are written as functions rather than classes. If a component does not depend on props, it can be written as a simple function whose name is the component name. For example, consider the following Hello World class we wrote in the beginning (React Components)
 
 ```js
 class HelloWrold extends React.Component
