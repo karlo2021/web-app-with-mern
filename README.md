@@ -10,7 +10,7 @@ Anything that can change due to an event anywhere in the component hierarchy qua
 
 Do not copy props into state, just because props are immutable. If you feel the need to do this, think of modifying the original state from which these props were derived. One exception is when props are used as initial values to the state, and the state is truly disjointed from the original state after the initialization.
 
-<b>Attribute                xState                             Props</b>
+<b>Attribute                State                             Props</b>
 <hr>
 Mutability         Can be changed using this.setState()   Cannot be changed
 
