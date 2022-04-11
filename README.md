@@ -22,3 +22,20 @@ Information        Model information                      Model information
 Affects            Rendering of the component             Rendering of the component
 
 </pre>
+
+### Component Hierarchy
+
+Split the application into components and subcomponents. Decide on the granularity just as you would for splitting functions and objects. The component should
+be self-contained with minimal and logical interfaces to the parent. If you find it doing too many things, just like in functions, it should probably be split into multiple components, so that it follows the Single Responsibility principle. If you are passing in too many props to a component, it is an indication that either the component needs to be split, or it need not exist: the parent itself could do the job.
+
+### Communication
+
+Communication between components depends on the direction. Parents communicate to children via props; when state changes, the props automatically change. Children communicate to parents via callbacks. Siblings and cousins can’t communicate with each other, so if there is a need, the information has to go up the hierarchy and then back down. This is called lifting the state up. This is what we did when we dealt with adding a new issue.
+
+If there is a need to know the state of a child in a parent, you’re probably doing it wrong. Although React does offer a way using refs, you shouldn’t feel the need if you follow the one-way data flow strictly: state flows as props into children, events cause state changes, which flows back as props.
+
+### Stateless Components
+
+In a well-designed application, most components would be stateless functions of their properties. All states would be captured in a few components at the top of the hierarchy, from where the props of all the descendants are derived.
+We did just that with the IssueList, where we kept the state. We converted all descendent components to stateless components, relying only on props passed down the hierarchy to render themselves.
+ Sometimes, you may find that there is no logical common ancestor. In such cases, you may have to invent a new component just to hold the state, even though visually the component has nothing.
