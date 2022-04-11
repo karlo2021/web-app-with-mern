@@ -43,5 +43,5 @@ We did just that with the IssueList, where we kept the state. We converted all d
  ## Summary
  
  In this chapter, you learned how to use state and make changes to it on user interactions or other events. The more interesting aspect was how state values are propagated down the component hierarchy as props. You also had a glimpse of user interaction: the click of a button to add a new issue, and how that causes the state
-to change, and in turn, how the props in the descendant components changed, causing them to rerender as well. Further, you learned how a child can communicate with its parent via callbacks. 
+to change, and in turn, how the props in the descendant components changed, causing them to rerender as well. Further, you learned how a child can communicate with its parent via callbacks. <br />
  We used simulated asynchronous calls and data local to the browser to achieve all this. In the next chapter, instead of using local data, we’ll fetch the data from the server. When an issue is added, we’ll send the data to the server to persist it.
