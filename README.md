@@ -71,3 +71,4 @@ The response object is used to construct and send a response. Note that if no re
 •	`res.status(code):` This sets the response status code. If not set, it is defaulted to 200 OK. One common way of sending an error is by combining the status() and send()<br /><br />
 •	`res.json(object):` This is the same as res.send(), except that this method forces conversion of the parameter passed into a JSON, whereas res.send() may treat
 some parameters like null differently. methods in a single call like res.status(403).send("Access Denied"). <br /><br />
+•	`res.sendFile(path):` This responds with the contents of the file at path.<br /><br />
