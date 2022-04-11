@@ -55,7 +55,7 @@ Any aspect of the request can be inspected using the request object’s properti
 `req.query:` This holds a parsed query string. It’s an object with keys as the query string parameters and values as the query string values. Multiple keys with the same name are converted to arrays, and keys with a square bracket notation result in nested objects<br />
 e.g., order[status]=closed can be accessed as req.query.order.status <br /><br/>
 `req.header, req.get(header):` The get method gives access to any header in the request. The header property is an object with all headers stored as key-value pairs. <br /><br />
-`req.path:` This contains the path part of the URL, that is, everything up to any ? that starts the query string. Usually, the path is part of the route specification, but if the path is a pattern that can match different URLs, you can use this property to get the actual path that was received in the request.
+`req.path:` This contains the path part of the URL, that is, everything up to any ? that starts the query string. Usually, the path is part of the route specification, but if the path is a pattern that can match different URLs, you can use this property to get the actual path that was received in the request.<br /><br /> 
 `req.url, req.originalURL:` These properties contain the complete URL, including the query string. Note that if you have any middleware that modifies
 the request URL, originalURL will hold the URL as it was received, before the modification.<br /><br />
 `req.body:` This contains the body of the request, valid for POST, PUT, and PATCH requests. Note that the body is not available (req.body will be undefined) unless a middleware is installed to read and optionally interpret or parse the body.<br />
