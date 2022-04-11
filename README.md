@@ -9,9 +9,9 @@ Both state and props hold model information, but they are different. The props a
 Anything that can change due to an event anywhere in the component hierarchy qualifies as being part of the state.
 
 Do not copy props into state, just because props are immutable. If you feel the need to do this, think of modifying the original state from which these props were derived. One exception is when props are used as initial values to the state, and the state is truly disjointed from the original state after the initialization.
+<pre>
+<b>Attribute                State                             Props</b>
 
-<b>Attribute`                `State`                             `Props</b>
-<hr>
 Mutability         Can be changed using this.setState()   Cannot be changed
 
 Ownership          Belongs to the component               Belongs to an ancestor the component gets a 
@@ -21,4 +21,4 @@ Information        Model information                      Model information
 
 Affects            Rendering of the component             Rendering of the component
 
-
+</pre>
