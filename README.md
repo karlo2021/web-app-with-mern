@@ -35,8 +35,8 @@ app.get('/hello', (req, res) => {
 
 &nbsp;&nbsp; The URL /customers/1234 will match the route specification, and so will /customers/4567. In either case, the customer ID will be captured and supplied to the handler function as part of the request in req. params, with the name of the parameter as the key. Thus, req.params.customerId will have the value 1234 or 4567 for each of these URLs, respectively.
 
- >  The query string is not part of the path specification, so you cannot have different handlers for 
- >  different parameters or values of the query string
+ > The query string is not part of the path specification, so you cannot have different handlers for different parameters or values of the
+ > query string
 
 ### Route Lookup
 
