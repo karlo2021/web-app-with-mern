@@ -72,3 +72,15 @@ The response object is used to construct and send a response. Note that if no re
 •	`res.json(object):` This is the same as res.send(), except that this method forces conversion of the parameter passed into a JSON, whereas res.send() may treat
 some parameters like null differently. methods in a single call like res.status(403).send("Access Denied"). <br /><br />
 •	`res.sendFile(path):` This responds with the contents of the file at path.<br /><br />
+
+There are many other methods and properties in the response object; you can look at the complete list in the Express documentation for Response at http://expressjs.com/en/api.html#res and Node.js’ Response object in the HTTP module at https://nodejs.org/api/http.html#http_class_http_serverresponse. 
+
+### Middleware
+
+Express is a web framework that has minimal functionality of its own. An Express application is essentially a series of middleware function calls. In fact, the Router itself is nothing but a middleware function. The distinction is that middleware usually works on generic handling of requests. A route, on the other hand, is meant to be used for a specific path+method combination and is expected to send out a response. <br />
+Middleware functions are those that have access to the request object (req), the response object (res), and the next middleware function in the application’s request-response cycle. The next middleware function is commonly denoted by a variable named next.<br />
+Middleware can be at the application level (applies to all requests) or at a specific path level (applies to specific request path patterns). The way to use a middleware at the application level is to simply supply the function to the application, like this:
+<br />`app.use(middlewareFunction);`<br />
+In the case of the static middleware, we constructed a middleware function by calling express.static() method. This not only returned a middleware function, but also configured it to use the directory called public to look for the static files. In order to use the same middleware for only requests matching a certain URL path, say, /public, the app.use() method would have to be called with two arguments, the first one being the path, like this:
+<br />`app.use('/public', expres.static('/public'));`<br />
+This would have mounted the static middleware on the path /public and all static files would have to be accessed with the prefix /public, for example, /public/index.html.
