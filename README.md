@@ -42,3 +42,22 @@ app.get('/hello', (req, res) => {
 
 &nbsp;&nbsp; Multiple routes can be set up to match different URLs and patterns. The router does not try to find a best match; instead, it tries to match all routes in the order in which they are installed. The first match is used. So, if two routes are possible matches to a request, it will use the first defined one. So, the routes have to be defined in the order of priority. <br />
 Thus, if you add patterns rather than very specific paths, you should be careful to add the more generic pattern after the specific paths in case a request can match both. For example, if you want to match everything that goes under /api/, that is, a pattern like `/api/*`, you should add this route only after all the more specific routes that handle paths such as `/api/issues`.
+
+### Handler Function
+
+Once a route is matched, the handler function is called The parameters passed to the handler are a request object and a response object. The handler function is not expected to return any value. But it can inspect the request object and send out a response as part of the response object based on the request parameters.
+
+### Request Object
+
+Any aspect of the request can be inspected using the request object’s properties and methods. A few important and useful properties and methods are listed here
+
+<b>req.params:</b> This is an object containing properties mapped to the named route parameters. The property’s key will be the name of the route parameter (customerId in this case) and the value will be the actual string sent as part of the HTTP request. <br />
+<b>req.query:</b> This holds a parsed query string. It’s an object with keys as the query string parameters and values as the query string values. Multiple keys with the same name are converted to arrays, and keys with a square bracket notation result in nested objects<br /> 
+e.g., `order[status]=closed` can be accessed as `req.query.order.status` <br/>
+<b>req.header, req.get(header):</b> The get method gives access to any header in the request. The header property is an object with all headers stored as key-value pairs. <br />
+<b>req.path:</b> This contains the path part of the URL, that is, everything up to any ? that starts the query string. Usually, the path is part of the route specification, but if the path is a pattern that can match different URLs, you can use this property to get the actual path that was received in the request.
+<b>req.url, req.originalURL:</b> These properties contain the complete URL, including the query string. Note that if you have any middleware that modifies
+the request URL, originalURL will hold the URL as it was received, before the modification.<br />
+<b>req.body:</b> This contains the body of the request, valid for POST, PUT, and PATCH requests. Note that the body is not available (req.body will be undefined) unless a middleware is installed to read and optionally interpret or parse the body.<br />
+
+There are many other methods and properties; for a complete list, refer to the Request documentation of Express at http://expressjs.com/en/api.html#req as well as Node.js’ request object at https://nodejs.org/api/http.html#http_class_http_incomingmessage, from which the Express Request is extended.
