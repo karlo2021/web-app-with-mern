@@ -64,3 +64,39 @@ const typeDefs = `
 `;
 ...
 ```
+
+Note that I stopped calling these APIs, rather I am calling even something like setAboutMessage a field. That’s because all of GraphQL has only fields, and accessing a field can have a side effect such as setting some value.
+
+The next step is to have handlers or functions that can be called when these fields are accessed. Such functions are called _resolvers_ because they resolve a query to a field with real values. Although the schema definition was done in the special Schema Language, the implementation of resolvers depends on the programming language that we use. For example, if you were to define the About API set, say, in Python, the schema string would look the same as in JavaScript. But the handlers would look quite different from what we are going to write in JavaScript.<br />
+In the Apollo Server as well as in graphql-tools, resolvers are specified as nested objects that follow the structure of the schema. At every leaf level, the field needs to be resolved using a function of the same name as the field. Thus, at the topmost level, we’ll have two properties named Query and Mutation in the resolver. 
+
+```js
+...
+const resolvers = {
+  Query: {
+  },
+  Mutation: {
+  },
+};
+...
+```
+
+Within the Query object, we’ll need a property for about, which is a function that returns the About message. Let’s first define that message as a variable at the top of the file. Since we will change the value of the message within the setAboutMessage field, we’ll need to use the let keyword rather than const.
+
+```js
+...
+let aboutMessage = "Issue Tracket API v1.0";
+...
+```
+
+Now, all the function needs to do is return this variable. A simple arrow function that takes no arguments should do the trick:
+
+```js
+...
+Query: {
+  about: () => aboutMessage,
+},
+...
+```
+
+The setAboutMessage function is not so simple since we’ll need to receive input arguments. All resolver functions are supplied four arguments like this:
