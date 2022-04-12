@@ -15,3 +15,26 @@ type User{
 ...
 ```
 
+For the About API, we don’t need any special types, just the basic data type String is good enough. But GraphQL schema has two special types that are entry points into the type system, called Query and Mutation. All other APIs or fields are defined hierarchically under these two types, which are like the entry points into the API. Query fields are expected to return existing state, whereas mutation fields are expected to change something in the application’s data.<br />
+
+A schema must have at least the Query type. The distinction between the query and mutation types is notional: there is nothing that you can do in a query or mutation that you cannot do in the other. But a subtle difference is that whereas query fields are executed in parallel, mutation fields are executed in series. So,
+it’s best to use them as they are meant to be used: implement READ operations under Query and things that modify the system under Mutation.
+The GraphQL type system supports the following basic data types:
+•	 Int: A signed 32-bit integer.
+•	 Float: A signed double-precision floating-point value.
+•	 String: A UTF-8 character sequence.
+•	 Boolean: true or false.
+•	 ID: This represents a unique identifier, serialized as a string. Using an ID instead of a string indicates that it is not intended to be human-readable.
+
+In addition to specifying the type, the Schema Language has a provision to indicate whether the value is optional or mandatory. By default, all values are optional (i.e., they can be null), and those that require a value are defined by adding an exclamation character (!) after the type.
+In the About API, all we need is a field called about under Query, which is a string and a mandatory one. Note that the schema definition is a string in JavaScript. We’ll use the template string format so that we can smoothly add newlines within the schema. 
+
+```js
+...
+const typeDefs = `
+  typeQuerry{
+    about: String!
+  }
+`;
+...
+```
