@@ -203,8 +203,76 @@ app.listen(3000, () => {
   
 GraphQL schema and introspection allows tools to be built that can let developers explore the API. The tool called Playground is available by default as part of the Apollo Server and can be accessed simply by browsing the API endpoint. Thus, if you type http://localhost:3000/graphql in your browser’s URL bar, you’ll find the Playground UI.
   
+The default for the Playground is a dark theme. Using the settings function (gear icon in the top-right
+corner), I have changed it to a light theme as well as reduced the font size to 12. 
+
+<img src=".resources/graphql-playground.JPG" width="860" height="385" >
   
+Before we test the APIs, it’s a good idea to explore the schema using the green SCHEMA button on the
+right side of the UI. On doing that, you’ll find that the about and setAboutMessage fields are described in the schema. To make a query, you can type the query in the left-side window and see the results on the right side after clicking on the Play button
+
+The query language has to be used to write the query. The language is JSON-like, but is not JSON. The
+query needs to follow the same hierarchical structure of the schema and is similar to it. But we don’t specify the types of the fields, just their names. In case of input fields, we specify the name and value, separated by a colon (:). Thus, to access the about field, a top-level query has to be used, which contains nothing but the field we need to retrieve, that is about.
   
-  
-  
-  
+```js
+query {
+  about
+}
+```
+
+Note that there is an autocompletion feature in the Playground, which may come in handy as you type.
+The Playground also shows errors in the query using red underlines. These features use the schema to know
+about the available fields, arguments, and their types. The Playground queries the schema from the server, so whenever the schema changes, if you rely on autocompletion, you need to refresh the browser so that the changed schema is retrieved from the server. <br />
+
+Since by default all queries are of type Query (as opposed to Mutation), we can skip the keyword query
+and just type { about }. But to keep it clear, let’s always include the query keyword. On clicking the Play button, you will find the following output on the results window on the right side:
+
+```json
+{
+  "data": {
+    "about": "Issue Tracker API v1.0"
+  }
+}
+```
+
+The output is a regular JSON object unlike the query. Now to test the setAboutMessage field, you can replace the query with a mutation, or better still, you can open a new tab using the + symbol in the UI and type in the mutation query like this:
+
+```js
+mutation {
+  setAboutMessage(message: "Hello World");
+}
+```
+
+Running this query should result in returning the same message as the result, like this:
+
+```json
+{
+  "data": {
+    "setaboutMessage": "Hello World";
+  }
+}
+```
+
+Now, running the original about query (in the first tab) should return the new message, "Hello
+World!" to prove that the new message has been successfully set in the server. To assure ourselves that there is no magic that the Playground is doing, let’s also run a query using cURL on the command line for the about field.
+
+A quick way to do this is to copy the command using the COPY CURL button in the Playground and
+paste it in the command shell. (On a Windows system, the shell does not accept single quotes, so you have
+to manually edit and change single quotes to double quotes and then escape the double quotes within the
+query using a backslash.) The command and its output will be as follows:
+
+```
+curl 'http://localhost:3000/graphql' -H 'Accept-Encoding: gzip, deflate, br' -H
+'Content-Type: application/json' -H 'Accept: application/json' -H 'Connection: keep-alive'
+-H 'DNT: 1' -H 'Origin: http://localhost:3000' --data-binary '{"query":"query {\n about\
+n}\n"}' –compressed
+{"data":{"about":"Hello World!"}}
+```
+
+Further, if you look at the headers (or understand the curl command), you will also find that for
+both the setAboutMessage mutation as well as the about query, the HTTP method used was the same:
+POST. It may feel a little disconcerting to use a POST method for fetching values from the server, so if
+you prefer a GET, you could use that instead. The query string of the GET URL can contain the query
+like this:
+
+`curl 'http://localhost:3000/graphql?query=query+\{+about+\}'`
