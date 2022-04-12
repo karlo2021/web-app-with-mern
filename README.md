@@ -19,11 +19,11 @@ For the About API, we don’t need any special types, just the basic data type S
 
 A schema must have at least the Query type. The distinction between the query and mutation types is notional: there is nothing that you can do in a query or mutation that you cannot do in the other. But a subtle difference is that whereas query fields are executed in parallel, mutation fields are executed in series. So,
 it’s best to use them as they are meant to be used: implement READ operations under Query and things that modify the system under Mutation.
-The GraphQL type system supports the following basic data types:
-•	 Int: A signed 32-bit integer.
-•	 Float: A signed double-precision floating-point value.
-•	 String: A UTF-8 character sequence.
-•	 Boolean: true or false.
+The GraphQL type system supports the following basic data types:<br />
+•	 Int: A signed 32-bit integer.<br />
+•	 Float: A signed double-precision floating-point value.<br />
+•	 String: A UTF-8 character sequence.<br />
+•	 Boolean: true or false.<br />
 •	 ID: This represents a unique identifier, serialized as a string. Using an ID instead of a string indicates that it is not intended to be human-readable.
 
 In addition to specifying the type, the Schema Language has a provision to indicate whether the value is optional or mandatory. By default, all values are optional (i.e., they can be null), and those that require a value are defined by adding an exclamation character (!) after the type.<br />
