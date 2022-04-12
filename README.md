@@ -26,7 +26,7 @@ The GraphQL type system supports the following basic data types:
 •	 Boolean: true or false.
 •	 ID: This represents a unique identifier, serialized as a string. Using an ID instead of a string indicates that it is not intended to be human-readable.
 
-In addition to specifying the type, the Schema Language has a provision to indicate whether the value is optional or mandatory. By default, all values are optional (i.e., they can be null), and those that require a value are defined by adding an exclamation character (!) after the type.
+In addition to specifying the type, the Schema Language has a provision to indicate whether the value is optional or mandatory. By default, all values are optional (i.e., they can be null), and those that require a value are defined by adding an exclamation character (!) after the type.<br />
 In the About API, all we need is a field called about under Query, which is a string and a mandatory one. Note that the schema definition is a string in JavaScript. We’ll use the template string format so that we can smoothly add newlines within the schema. 
 
 ```js
@@ -34,6 +34,32 @@ In the About API, all we need is a field called about under Query, which is a st
 const typeDefs = `
   typeQuerry{
     about: String!
+  }
+`;
+...
+```
+
+We’ll use the variable typeDefs when we initialize the server, but before that, let’s also define another field that lets us change the message and call this setAboutMessage. But this needs an input value for the new message that we will receive. Such input values are specified just like in function calls: using
+parentheses. Thus, to indicate that this field needs a mandatory string input called message, we need to write:
+
+```js
+...
+setAboutMessage(message: String!);
+...
+```
+
+Note that all arguments must be named. There are no positional arguments in the GraphQL Schema Language. Also, all fields must have a type, and there is no void or other type that indicates that the field returns nothing. To overcome this, we can just use any data type and make it optional so that the caller does not expect a value.
+
+Let’s use a string data type as the return value for the setAboutMessage field and add it to the schema under the Mutation type. Let’s also name the variable that contains the schema typeDefs and define it as a string in server.js:
+
+```js
+...
+const typeDefs = `
+  typeQuery {
+    about: String!
+  }
+  typeMutation {
+    setAboutMessage(message: String!): String
   }
 `;
 ...
