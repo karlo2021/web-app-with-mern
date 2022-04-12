@@ -13,10 +13,20 @@ Resources can also form a hierarchy. For example, the collection of orders of a 
 To access and manipulate the resources, you use HTTP methods. While resources were nouns, the HTTP methods are verbs that operate on them. They map to CRUD (Create, Read, Update, Delete) operations on the resource. Table 5-1 shows commonly used mapping of CRUD operations to HTTP methods and resources.
 
 <pre>
-<b>Operation    Method     Resource    Example         Remarks</b>
+<b>Operation    Method     Resource    Example             Remarks</b>
 <hr>
-Read – List      GET     Collection   GET /customers  Lists objects (additional query
-                                                      string can be used for filtering and
-                                                      sorting)
-                                                      
+Read – List      GET     Collection   GET /customers      Lists objects (additional query
+                                                          string can be used for filtering and
+                                                          sorting)
+Read             GET        Object    GET/customers/1234  Returns a single object (query string
+                                                          may be used to specify which fields)
+Create           POST     Collection  POST /customers     Creates an object with the values
+                                                          specified in the body                                     
+Update           PUT      Object      PUT /               Replaces the object with the one
+                                      customers/1234      specified in the body     
+Update           PATCH    Object      PATCH /             Modifies some properties of the
+                                      customers/1234      object, as specified in the body 
+Delete           DELETE   Object      DELETE /            Deletes the object
+                                      customers/1234
+<hr>
 </pre>
