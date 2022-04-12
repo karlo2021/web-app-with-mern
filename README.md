@@ -196,7 +196,7 @@ app.listen(3000, () => {
 });
 ```
   
-  
+GraphQL schema and introspection allows tools to be built that can let developers explore the API. The tool called Playground is available by default as part of the Apollo Server and can be accessed simply by browsing the API endpoint. Thus, if you type http://localhost:3000/graphql in your browser’s URL bar, you’ll find the Playground UI.
   
   
   
