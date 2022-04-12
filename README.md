@@ -100,3 +100,13 @@ Query: {
 ```
 
 The setAboutMessage function is not so simple since we’ll need to receive input arguments. All resolver functions are supplied four arguments like this:
+
+`fileName(obj, args, context, info);`
+
+The arguments are described here:<br />
+•	 obj: The object that contains the result returned from the resolver on the parent field. This argument enables the nested nature of GraphQL queries<br />
+•	 args: An object with the arguments passed into the field in the query. For example, if the field was called with setAboutMessage(message: "New Message"), the args
+object would be: { "message": "New Message" }.<br />
+•	context: This is an object shared by all resolvers in a particular query and is used to contain per-request state, including authentication information, dataloader
+instances, and anything else that should be taken into account when resolving the query.<br />
+•	 info: This argument should only be used in advanced cases, but it contains information about the execution state of the query.<br />
