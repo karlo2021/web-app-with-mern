@@ -30,3 +30,11 @@ Delete           DELETE   Object      DELETE /            Deletes the object
                                       customers/1234
 <hr>
 </pre>
+
+Some other operations such as DELETE and PUT in the collection may also be used to delete and modify the entire collection in one shot, but this is not common usage. HEAD and OPTIONS are also valid verbs that give out information about the resources rather than actual data. They are used mainly for APIs that are externally exposed and consumed by many different clients.<br />
+
+•	 Filtering, sorting, and paginating a list of objects. The query string is commonly used in an implementation-specific way to specify these.<br/>
+•	 Specifying which fields to return in a READ operation.<br/>
+•	 If there are embedded objects, specifying which of those to expand in a READ operation.<br/>
+•	 Specifying which fields to modify in a PATCH operation.<br/>
+•	 Representation of objects. You are free to use JSON, XML, or any other representation for the objects in both READ and WRITE operations.<br/>
