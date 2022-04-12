@@ -1,86 +1,22 @@
-# Express & GraphQL
+# REST Api
 
-&nbsp;&nbsp; Until now, the only resource the Express and Node.js server was serving was static content in the form of index.html. In this chapter, we’ll start fetching and storing the data using APIs from the Express and Node.js server in addition to the static HTML file. This will replace the hard-coded array of issues in the browser’s memory.
+REST (short for representational state transfer) is an architectural pattern for application programming interfaces (APIs). There are other older patterns such as SOAP and XMLRPC, but of late, the REST pattern has gained popularity.
 
-We will not persist the data on disk; instead, we’ll just use a simulated database in the server’s memory. We will leave actual persistence to the next chapter.
+### Resource Based 
 
-## Express
+The APIs are resource based (as opposed to action based). Thus, API names like getSomething or saveSomething are not normal in REST APIs. In fact, there are no API names in the conventional sense, because APIs are formed by a combination of resources and actions. There are really only resource names
+called endpoints.<br/>
+Resources are accessed based on a Uniform Resource Identifier (URI), also known as an endpoint. Resources are nouns (not verbs). You typically use two URIs per resource: one for the collection (like /customers) and one for an individual object (like /customers/1234), where 1234 uniquely identifies a customer.
+Resources can also form a hierarchy. For example, the collection of orders of a customer is identified by /customers/1234/orders, and an order of that customer is identified by /customers/1234/orders/43.
 
-&nbsp;&nbsp; In the Hello World chapter we saw how to serve static files using Express. Express is a minimal, yet, flexible web application framework. It’s minimal in the sense that by itself, Express does very little. It relies on other modules called middleware to provide the functionality that most applications will need.
+### HTTP Methods as Actions
+To access and manipulate the resources, you use HTTP methods. While resources were nouns, the HTTP methods are verbs that operate on them. They map to CRUD (Create, Read, Update, Delete) operations on the resource. Table 5-1 shows commonly used mapping of CRUD operations to HTTP methods and resources.
 
-### Routing
-
-&nbsp;&nbsp; At the heart of Express is a router, which essentially takes a client request, matches it against any routes that are present, and executes the handler function that is associated with that route.<br />
-&nbsp;&nbsp; A route specification consists of an HTTP method (GET, POST, etc.), a path specification that matches the request URI, and the route handler. The handler is passed in a request object and a response object. The request object can be inspected to get the various details of the request, and the response object’s methods
-can be used to send the response to the client.<br />
-&nbsp;&nbsp; We already have an Express application in the which we created using the express() function. We also installed a middleware for handling static files. A middleware function deals with any request matching the path specification, regardless of the HTTP method. In contrast, a route can match a request with a specific HTTP method. So, instead of app.use(), app.get() has to be used in order to match the GET HTTP method. Further, the handler function, the second argument that the routing function takes, can set the response to be sent back to the caller
-
-```js
-...
-app.get('/hello', (req, res) => {
-  res.send('hello world');
-});
-...
-```
-
-### Request Matching
-
-&nbsp;&nbsp; When a request is received, the first thing that Express does is match the request to one of the routes. The request method is matched against the route’s method. In the previous example, the route’s method is get() so any HTTP request using the GET method will match it. Further, the request URL is matched with the path specification, the first argument in the route, which is /hello. When a HTTP request matches this specification, the handler function is called. The route’s method and path need not be specific. If you want to match all HTTP methods, you could write app.all(). If you needed to match multiple paths, you could pass in an array of paths, or even a regular expression like `'/*.do'` will match any request ending with the extension .do. 
-
-### Route Parameters
-
-&nbsp;&nbsp; Route parameters are named segments in the path specification that match a part of the URL. If a match occurs, the value in that part of the URL is supplied as a variable in the request object.
-
-`app.get('/coustomers/:coustomerId', ... );`
-
-&nbsp;&nbsp; The URL /customers/1234 will match the route specification, and so will /customers/4567. In either case, the customer ID will be captured and supplied to the handler function as part of the request in req. params, with the name of the parameter as the key. Thus, req.params.customerId will have the value 1234 or 4567 for each of these URLs, respectively.
-
- > The query string is not part of the path specification, so you cannot have different handlers for different parameters or values of the
- > query string
-
-### Route Lookup
-
-&nbsp;&nbsp; Multiple routes can be set up to match different URLs and patterns. The router does not try to find a best match; instead, it tries to match all routes in the order in which they are installed. The first match is used. So, if two routes are possible matches to a request, it will use the first defined one. So, the routes have to be defined in the order of priority. <br />
-Thus, if you add patterns rather than very specific paths, you should be careful to add the more generic pattern after the specific paths in case a request can match both. For example, if you want to match everything that goes under /api/, that is, a pattern like `/api/*`, you should add this route only after all the more specific routes that handle paths such as `/api/issues`.
-
-### Handler Function
-
-Once a route is matched, the handler function is called The parameters passed to the handler are a request object and a response object. The handler function is not expected to return any value. But it can inspect the request object and send out a response as part of the response object based on the request parameters.
-
-### Request Object
-
-Any aspect of the request can be inspected using the request object’s properties and methods. A few important and useful properties and methods are listed here
-
-•	`req.params:` This is an object containing properties mapped to the named route parameters. The property’s key will be the name of the route parameter (customerId in this case) and the value will be the actual string sent as part of the HTTP request. <br /><br />
-•	`req.query:` This holds a parsed query string. It’s an object with keys as the query string parameters and values as the query string values. Multiple keys with the same name are converted to arrays, and keys with a square bracket notation result in nested objects<br />
-e.g., order[status]=closed can be accessed as req.query.order.status <br /><br/>
-•	`req.header, req.get(header):` The get method gives access to any header in the request. The header property is an object with all headers stored as key-value pairs. <br /><br />
-•	`req.path:` This contains the path part of the URL, that is, everything up to any ? that starts the query string. Usually, the path is part of the route specification, but if the path is a pattern that can match different URLs, you can use this property to get the actual path that was received in the request.
-<br /><br /> 
-•	`req.url, req.originalURL:` These properties contain the complete URL, including the query string. Note that if you have any middleware that modifies
-the request URL, originalURL will hold the URL as it was received, before the modification.<br /><br />
-•	`req.body:` This contains the body of the request, valid for POST, PUT, and PATCH requests. Note that the body is not available (req.body will be undefined) unless a middleware is installed to read and optionally interpret or parse the body.<br />
-
-There are many other methods and properties; for a complete list, refer to the Request documentation of Express at http://expressjs.com/en/api.html#req as well as Node.js’ request object at https://nodejs.org/api/http.html#http_class_http_incomingmessage, from which the Express Request is extended.
-
-### Response Object
-
-The response object is used to construct and send a response. Note that if no response is sent, the client is left waiting.
-
-•	`res.send(body):` You already saw the res.send() method briefly, which responded with a string. This method can also accept a buffer (in which case the content type is set as application/octet-stream as opposed to text/html in case of a string). If the body is an object or an array, it is automatically converted to a JSON string with an appropriate content type.<br/><br />
-•	`res.status(code):` This sets the response status code. If not set, it is defaulted to 200 OK. One common way of sending an error is by combining the status() and send()<br /><br />
-•	`res.json(object):` This is the same as res.send(), except that this method forces conversion of the parameter passed into a JSON, whereas res.send() may treat
-some parameters like null differently. methods in a single call like res.status(403).send("Access Denied"). <br /><br />
-•	`res.sendFile(path):` This responds with the contents of the file at path.<br /><br />
-
-There are many other methods and properties in the response object; you can look at the complete list in the Express documentation for Response at http://expressjs.com/en/api.html#res and Node.js’ Response object in the HTTP module at https://nodejs.org/api/http.html#http_class_http_serverresponse. 
-
-### Middleware
-
-Express is a web framework that has minimal functionality of its own. An Express application is essentially a series of middleware function calls. In fact, the Router itself is nothing but a middleware function. The distinction is that middleware usually works on generic handling of requests. A route, on the other hand, is meant to be used for a specific path+method combination and is expected to send out a response. <br />
-Middleware functions are those that have access to the request object (req), the response object (res), and the next middleware function in the application’s request-response cycle. The next middleware function is commonly denoted by a variable named next.<br />
-Middleware can be at the application level (applies to all requests) or at a specific path level (applies to specific request path patterns). The way to use a middleware at the application level is to simply supply the function to the application, like this:
-<br />`app.use(middlewareFunction);`<br />
-In the case of the static middleware, we constructed a middleware function by calling express.static() method. This not only returned a middleware function, but also configured it to use the directory called public to look for the static files. In order to use the same middleware for only requests matching a certain URL path, say, /public, the app.use() method would have to be called with two arguments, the first one being the path, like this:
-<br />`app.use('/public', expres.static('/public'));`<br />
-This would have mounted the static middleware on the path /public and all static files would have to be accessed with the prefix /public, for example, /public/index.html.
+<pre>
+<b>Operation    Method     Resource    Example         Remarks</b>
+<hr>
+Read – List      GET     Collection   GET /customers  Lists objects (additional query
+                                                      string can be used for filtering and
+                                                      sorting)
+                                                      
+</pre>
