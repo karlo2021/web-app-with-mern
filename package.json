@@ -20,7 +20,9 @@
   },
   "homepage": "https://github.com/karlo2021/NodeJs#readme",
   "dependencies": {
+    "apollo-server-express": "^2.25.3",
     "express": "^4.17.3",
+    "graphql": "^0.13.2",
     "nodemon": "^2.0.15"
   },
   "devDependencies": {
