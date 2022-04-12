@@ -110,3 +110,96 @@ object would be: { "message": "New Message" }.<br />
 •	context: This is an object shared by all resolvers in a particular query and is used to contain per-request state, including authentication information, dataloader
 instances, and anything else that should be taken into account when resolving the query.<br />
 •	 info: This argument should only be used in advanced cases, but it contains information about the execution state of the query.<br />
+
+The return value should be of the type that is specified in the schema. In the case of the field setAboutMessage, since the return value is optional, it can choose to return nothing. But it’s good practice to return _some_ value to indicate successful execution of the field, so let’s just return the message input value.
+We will also not be using any properties of the parent object (Query) in this case, so we can ignore the first argument, obj, and use only the property within args. Thus, the function definition for setAboutMessage looks like this:
+
+```js
+...
+function setAboutMessage(_, {message}) {
+  return aboutMessage = message;
+}
+...
+```
+
+ > We used the ES2015 Destructuring Assignment feature to access the message property present inside the second argument called args. This is equivalent to naming the 
+ > argument as args and accessing the property as args.message rather than simply message.
+
+Now, we can assign this function as the resolver for setAboutMessage within the Mutation top-level field like this:
+
+```js
+...
+Mutation: {
+  setAboutMessage,
+},
+...
+```
+
+ > We used the ES2015 Object Property Shorthand to specify the value of the setAboutMessage property. When the property name and the variable name assigned to it are 
+ > the same, the variable name can be skipped. Thus, { setAboutMessage: setAboutMessage } can be simply written as { setAboutMessage }.
+
+Now that we have the schema defined as well as the corresponding resolvers, we are ready to initialize the GraphQL server. The way to do this is to construct an ApolloServer object defined in the apolloserver-express package. The constructor takes in an object with at least two properties—typeDefs and resolvers—and returns a GraphQL server object.
+
+```js
+...
+const  { AppoloServer } = require('appolo-server-express');
+...
+const servver = new AppoloServer({
+  typeDefs,
+  resolvers
+});
+...
+```
+
+Finally, we need to install the Apollo Server as a middleware in Express. We need a path (the single endpoint) where we will mount the middleware. But, the Apollo Server is not a single middleware; there are in fact a group of middleware functions that deal with different HTTP methods differently. The ApolloServer object gives us a convenience method that does all this for us, called applyMiddleware. It takes in a configuration object as its argument that configures the server, of which two important properties are app and path. Thus, to install the middleware in the Express application, let’s add the following code:
+
+`server.applyMiddleware({app, path: 'graphql/' });`
+
+After putting all this together, we should have a working API server. The new contents of server.js are shown
+
+```js
+const express = require('express');
+const { AppoloServer } = require('appolo-server-express');
+
+let aboutMessage = "Issue Tracker API v1.0";
+
+cosnt typeDefs = `{
+  type Query{
+    about: String!
+  }
+  type Mutation {
+    setAboutmessage(message: String!): String
+  }
+`;
+
+cosnt resolvers = {
+  Query: {
+    about: () => aboutMessage,
+  },
+  Mutation {
+    setAboutMessage,
+  },
+};
+
+function setAboutMessage(_, {message}) {
+  return setAboutMessage(message);
+}
+
+const app = express();
+
+app.use(express.static('public/'));
+
+server.applyMiddleware({ app, path: 'graphql/' });
+
+app.listen(3000, () => {
+  cosnole.log('Server listening on port 3000');
+});
+```
+  
+  
+  
+  
+  
+  
+  
+  
