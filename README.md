@@ -206,7 +206,7 @@ GraphQL schema and introspection allows tools to be built that can let developer
 The default for the Playground is a dark theme. Using the settings function (gear icon in the top-right
 corner), I have changed it to a light theme as well as reduced the font size to 12. 
 
-<img src=".resources/graphql-playground.JPG" width="860" height="385" />
+<img src="./resources/graphql-playground.JPG" width="860" height="385" >
   
 Before we test the APIs, it’s a good idea to explore the schema using the green SCHEMA button on the
 right side of the UI. On doing that, you’ll find that the about and setAboutMessage fields are described in the schema. To make a query, you can type the query in the left-side window and see the results on the right side after clicking on the Play button
