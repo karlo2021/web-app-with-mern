@@ -15,7 +15,7 @@ type Mutation {
 Now, to use this instead of the string variable, this file’s contents have to be read into a string. Let’s use the fs module and the readFileSync function to read the file. Then, we can use the string that readFileSyc returned as the value for the property typeDefs when creating the Apollo Server. 
 
 <pre>
-cosnt fs = require('fs');
+<b>cosnt fs = require('fs');</b>
 cosnt express = require('express');
 ...
 <del>const typeDefs = `
