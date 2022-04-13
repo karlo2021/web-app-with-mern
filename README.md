@@ -32,7 +32,7 @@ In the About API, all we need is a field called about under Query, which is a st
 ```js
 ...
 const typeDefs = `
-  typeQuerry{
+  type Query{
     about: String!
   }
 `;
