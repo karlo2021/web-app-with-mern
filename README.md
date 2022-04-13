@@ -177,6 +177,7 @@ function IssueRow(props) {
 class IssueList extends React.Component {
   async loadData() {
     ...
+    <del>const result = await response.json()</del>
     <b>const body = await response.text();
     const result = JSON.parse(body, jsonDateReviver);</b>
     this.setState({ issues: result.data.issueList }); 
