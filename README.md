@@ -1,123 +1,189 @@
-# Integrated List Api
+# Custom Scalar Types
 
-Now that we have the List API working, let’s get it integrated into the UI. In this section, we will replace the implementation of the loadData() method in the IssueList React component with something that fetches the data from the server.
-To use the APIs, we need to make asynchronous API calls, or Ajax calls. The popular library jQuery
-is an easy way to use the $.ajax() function, but including the entire jQuery library just for this purpose seems like overkill. Fortunately, there are many libraries that provide this functionality.
-Better still, modern browsers support Ajax calls natively via the Fetch API. For older browsers such as Internet Explorer, a polyfill for the Fetch API is available from whatwg-fetch. Let’s use this polyfill directly from a CDN and include it in index.html.
+Storing dates as strings may seem to work most times, but not always. For one, sorting and filtering on dates makes it harder, because one has to convert from string to Date types every time. Also, dates should ideally be displayed in the user’s time zone and locale, regardless of where the server is. Different users may see the same dates differently based on where they are.
+To achieve all that, we need to store dates as JavaScript’s native Date objects. It should ideally be
+converted to a locale-specific string at the time of displaying it to the user only. But unfortunately, JSON does not have a Date type, and thus, transferring data using JSON in API calls also must convert the date to and from strings.
+The recommended string format for transferring Date objects in a JSON is the ISO 8601 format. It is also the same format used by JavaScript Date’s toJSON() method. In thisformat, a date such as 26 January 2019, 2:30 PM UTC would be written as 2019-01-26T14:30:00.000Z. It is easy and unambiguous to convert a date to this string using either the toJSON() or the toISOString() methods of Date, as well as to convert it back to a date using new Date(dateString).
 
-```js
-...
-<script src="https://unpkg.com/@babel/polyfill@7/dist/polyfill.min.js"></script>
-<b><script src="https://unpkg.com/whatwg-fetch@3.0.0/dist/fetch.umd.js"></script></b>
-...
-```
+Although GraphQL does not support dates natively, it has support for custom scalar types, which can be
+used for creating a custom scalar type date. To be able to use a custom scalar type, the following has to be done:
 
-Next, within the loadData() method, we need to construct a GraphQL query. This is a simple string like
-what we used in the Playground to test the issueList GraphQL field. But we’ve to ensure that we’re querying for all subfields of an issue
-
-```js
-...
-  const query = `query {
-    issueList {
-      id title status owner
-      created effort due 
-    }
-  }`;
-...
-```
-
-We’ll send this query string as the value for the query property within a JSON, as part of the body to the fetch request. The method we’ll use is POST and we’ll add a header that indicates that the content type is JSON. Here’s the complete fetch request:
-
-```js
-...
-  const response = await fetch('/graphql', {
-    method: 'POST',
-    headers: { 'Content-type': 'application/json' },
-    body: JSON.stringfy({ query }),
-  });
-...
-```
-
- > We used the await keyword to deal with asynchronous calls. This is part of the ES2017 specification
- > and is supported by the latest versions of all browsers except Internet Explorer. It is automatically 
- > handled by Babel transforms for older browsers. Also, await can only be used in functions that are
- > marked async. We will have to add the async keyword to the loadData() function soon. If you are not 
- > familiar with the async/await construct, you can learn about it at 
- > https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function.
-
-Once the response arrives, we can get the JSON data converted to a JavaScript object by using the
-response.json() method. Finally, we need to call a setState() to supply the list of issues to the state
-variable called issues, like this:
-
-```js
-...
-  const result = await response.json();
-  this.setState({ issue: result.data.issueList })
-...
-```
-
-We will also need to add the keyword async for the function definition of loadData() since we have
-used awaits within this function.
-At this point, you will be able to refresh the Issue Tracker application in the browser, but you will see
-an error. This is because we used a string instead of Date objects, and a call to convert the date to a string using toDateString() in the IssueRow component’s render() method throws an error. Let’s remove the
-conversions and use the strings as they are:
-
-```js
-  <td>{issue.created}</td>
-  ...
-  <td>{issue.due}</td>
-```
-
-We can also now remove the global variable initialIssues, as we no longer require it within loadData(). The complete set of changes in App.jsx is shown in Listing
+1. Define a type for the scalar using the scalar keyword instead of the type keyword in the schema.
+2. Add a top-level resolver for all scalar types, which handles both serialization (on the way out) as well as parsing (on the way in) via class methods.
+After these, the new type can be used just as any native scalar type like String and Int would be used.
+Let’s call the new scalar type GraphQLDate. The scalar type has to be defined as such in the schema using thescalar keyword followed by the name of the custom type. Let’s put this in the beginning of the file. Now, we can replace the String type association with the created and due fields with GraphQLDate. 
 
 <pre>
-<del>const initialIssues = [
-  {
-    id: 1, status: 'New', owner: 'Ravan', effort: 5,
-    created: new Date('2018-08-15'), due: undefined,
-    title: 'Error in console when clicking Add',
+<b>scalar GraphQLDate</b>
+
+type Issue {
+  id: Int!
+  ...
+  created: <del>String!</del><b>GraphQLDate</b>
+  due: <del>Strign!</del><b>GraphQlDate</b>
+}
+...
+</pre>
+
+A scalar type resolver needs to be an object of the class GraphQLScalarType, defined in the package
+graphql-tools. Let’s first import this class in server.js:
+
+```js
+...
+const { GraphQLScalarTypes } = require('graphql');
+...
+```
+
+The constructor of GraphQLScalarType takes an object with various properties. We can create this
+resolver by calling new() on the type like this:
+
+```js
+...
+const GraphQLDate = new GraphQLScalar({...});
+...
+```
+
+Two properties of the initializer—name and description—are used in introspection, so let’s set them:
+
+```js
+...
+  name: 'GraphQLDate',
+  description: 'A Date() type in GraphQL as a scalar',
+...
+```
+
+The class method serialize() will be called to convert a date value to a string. This method takes the
+value as an argument and expects a string to be returned. All we need to do, thus, is call toISOString() on the value and return it. Here’s the serialize() method:
+
+```js
+...
+serialize(value) {
+  return value.toISOString();
+},
+...
+```
+
+Two other methods, parseValue() and parseLiteral(), are needed to parse strings back to dates. Let’s
+leave this parsing to a later stage when it is really needed for accepting input values, since these are optional methods.
+Finally, we need to set this resolver at the same level as Query and Mutation (at the top level) as the
+value for the scalar type GraphQLDate. The complete set of changes in server.js is shown:
+
+<pre>
+...
+const { ApolloServer } = require('apollo-server-express');
+<b>const { GraphQLScalarType } = require('graphql');
+...
+const GraphQLDate = new GraphQLScalarType({
+  name: 'GraphQLDate',
+  description: 'A Date() type in GraphQL as a scalar',
+  serialize(value) {
+    return value.ToISOString();
   },
-  {
-    id: 2, status: 'Assigned', owner: 'Eddie', effort: 14,
-    created: new Date('2018-08-16'), due: new Date('2018-08-30'),
-    title: 'Missing bottom border on panel',
+});
+</b>
+const resolvers = {
+  Query: {
+    ...
+  }
+  Mutation: {
+    ...
   },
-];</del>
+  <b>GraphQLDate,</b>
+};
+...
+</pre>
+
+At this point, if you switch to the Playground and refresh the browser (due to schema changes), and
+then test the List API. You will see that dates are being returned as the ISO string equivalents rather than the locale-specific long string previously used. Here’s a query for testing in the Playground:
+<hr>
+query {
+  issueList {
+    title
+    created
+    due
+  }
+}
+<hr>
+Here are the results for this query
+
+```json
+{
+  "data": {
+    "issueList": [
+      {
+        "title": "Error in console when clicking Add",
+        "created": "",
+        "due": null
+      },
+      {
+        "title": "Error in console when clicking Add",
+        "created": "",
+        "due": null
+      }
+    ]
+  }
+}
+```
+
+Now, in App.jsx, we can convert the string to the native Date type. One way to do this is to loop
+through the issues after fetching them from the server and replace the fields due and created with their
+date equivalents. A better way do this is to pass a reviver function to the JSON parse() function. A reviver function is one that is called for parsing all values, and the JSON parser gives it a chance to modify what the default parser would do.
+So, let’s create such a function that looks for a date-like pattern in the input and converts all such values to a date. We’ll use a regular expression to detect this pattern, and a simple conversion using new Date(). Here’s the code for the reviver:
+
+```js
+...
+const dateRegex = new RegExp('^\\d\\d\\d\\d-\\d\\d-\\d\\d');
+
+function jsonDateReviver(key, value) {
+  if(dateRegex.test(value)) return new Date(value);
+  return value;
+}
+...
+```
+
+The conversion function response.json() does not have the capability to let us specify a reviver, so we
+have to get the text of the body using response.text() and parse it ourselves using JSON.parse() by passing in the reviver, like this:
+
+```js
+...
+  const body = await response.text();
+  const result = JSON.parse(body, jsonDateReviver);
+...
+```
+
+Now, we can revert our changes to display the dates to what we had before: using toDateString() to
+render the dates in IssueRow. Including this change, the complete set of changes for using the Date scalar type in App.jsx is shown:
+
+<pre>
+<b> const dateRegex = new RegExp('^\\d\\d\\d\\d-\\d\\d-\\d\\d');
+
+function jsonDateReviver(key, value) {
+  if (dateRegex.test(value)) return new Date(value);
+  retrun value;
+}</b>
 
 function IssueRow(props) {
   const issue = props.issue;
-  render() {
-    return(
+  retrun(
+    tr
       ...
-        <td>{issue.created<del>.toDateString()}</td></del>
-        <td>{issue.effort}</td>
-        <td>{issue.due <del>? issue.due.toDateString() : ''}</td></del>
+      td{issue.created.<b>ToDateString()</b>}/td
+      td{issue.effort}/td
+      td{issue.due ? <b>issue.due.ToDateString() : ''</b>}/td
       ...
-    );
-  }
+  );
 }
-
-<b>async</b> loadData() {
-  <del>setTimeout(() => {
-    this.setState({issues: initialIssues})
-  }, 500);</del>
-  <b>const query = `query {
-    issueList {
-      id title status owner
-      created effort due
-    }
-  }`;
-
-  const response = await fetch('/graphql', {
-    method: POST,
-    headers: {'Content-type: 'application/json'},
-    body: JSON.stringify({ query })
-  });
-  const result = await response.json();
-  this.setState({issues: result.data.issueList});
-}</b>
+...
+class IssueList extends React.Component {
+  async loadData() {
+    ...
+    <b>const body = await response.text();
+    const result = JSON.parse(body, jsonDateReviver);</b>
+    this.setState({ issues: result.data.issueList }); 
+  }
+  ...
+}
+...
 </pre>
 
-![expected-output](./resources/expected-output.JPG)
-
-You will notice that the dates are long and ungainly, but otherwise, the screen looks the same as it did at the end of the previous chapter. An Add operation will not work, because it uses Date objects rather than strings when adding a new issue. We will address these two issues in the next section.
+With this set of changes, the application should appear as before, at the end of the previous chapter. The dates will look nicely formatted. Even adding an issue should work, but on refreshing the browser, the added issue will disappear. That’s because we have not saved the issue in the server—all we have done is changed the local state of the issue list in the browser, which will be reset to the initial set of issues on a refresh.
