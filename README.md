@@ -96,12 +96,12 @@ const resolvers = {
 At this point, if you switch to the Playground and refresh the browser (due to schema changes), and
 then test the List API. You will see that dates are being returned as the ISO string equivalents rather than the locale-specific long string previously used. Here’s a query for testing in the Playground:
 <hr>
-query {
-  issueList {
-    title
-    created
-    due
-  }
+query {<br/>
+  issueList {<br/>
+    title<br/>
+    created<br/>
+    due<br/>
+  }<br/>
 }
 <hr>
 Here are the results for this query
