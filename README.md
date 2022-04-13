@@ -55,10 +55,10 @@ Let’s use a string data type as the return value for the setAboutMessage field
 ```js
 ...
 const typeDefs = `
-  typeQuery {
+  type Query {
     about: String!
   }
-  typeMutation {
+  type Mutation {
     setAboutMessage(message: String!): String
   }
 `;
