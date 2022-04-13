@@ -97,11 +97,11 @@ At this point, if you switch to the Playground and refresh the browser (due to s
 then test the List API. You will see that dates are being returned as the ISO string equivalents rather than the locale-specific long string previously used. Here’s a query for testing in the Playground:
 <hr>
 query {<br/>
-  issueList {<br/>
-    title<br/>
-    created<br/>
-    due<br/>
-  }<br/>
+  &nbsp;&nbsp;issueList {<br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;title<br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;created<br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;due<br/>
+  &nbsp;&nbsp;}<br/>
 }
 <hr>
 Here are the results for this query
