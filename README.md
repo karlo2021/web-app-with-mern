@@ -248,7 +248,7 @@ Running this query should result in returning the same message as the result, li
 ```json
 {
   "data": {
-    "setaboutMessage": "Hello World";
+    "setaboutMessage": "Hello World"
   }
 }
 ```
