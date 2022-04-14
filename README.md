@@ -1,4 +1,4 @@
-# Web App With NodeJS
+# Web App With MERN (Mongo, Express, React, Node)
 
 ## This repository is using book Pro MERN Stack (Vasan Subramanian) as reference
 
