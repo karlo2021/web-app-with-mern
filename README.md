@@ -19,7 +19,7 @@ Let’s call the new scalar type GraphQLDate. The scalar type has to be defined 
 type Issue {
   id: Int!
   ...
-  created: <del>String!</del><b>GraphQLDate</b>
+  created: <del>String!</del><b>GraphQLDate!</b>
   due: <del>Strign!</del><b>GraphQLDate</b>
 }
 ...
@@ -112,12 +112,12 @@ Here are the results for this query
     "issueList": [
       {
         "title": "Error in console when clicking Add",
-        "created": "",
+        "created": "created": "2019-01-15T00:00:00.000Z",
         "due": null
       },
       {
         "title": "Error in console when clicking Add",
-        "created": "",
+        "created": "2019-01-16T00:00:00.000Z",
         "due": null
       }
     ]
@@ -188,3 +188,5 @@ class IssueList extends React.Component {
 </pre>
 
 With this set of changes, the application should appear as before, at the end of the previous chapter. The dates will look nicely formatted. Even adding an issue should work, but on refreshing the browser, the added issue will disappear. That’s because we have not saved the issue in the server—all we have done is changed the local state of the issue list in the browser, which will be reset to the initial set of issues on a refresh.
+
+![expected-output](./resources/expected-output.JPG)
