@@ -3,7 +3,7 @@
 Storing dates as strings may seem to work most times, but not always. For one, sorting and filtering on dates makes it harder, because one has to convert from string to Date types every time. Also, dates should ideally be displayed in the user’s time zone and locale, regardless of where the server is. Different users may see the same dates differently based on where they are.
 To achieve all that, we need to store dates as JavaScript’s native Date objects. It should ideally be
 converted to a locale-specific string at the time of displaying it to the user only. But unfortunately, JSON does not have a Date type, and thus, transferring data using JSON in API calls also must convert the date to and from strings.
-The recommended string format for transferring Date objects in a JSON is the ISO 8601 format. It is also the same format used by JavaScript Date’s toJSON() method. In thisformat, a date such as 26 January 2019, 2:30 PM UTC would be written as 2019-01-26T14:30:00.000Z. It is easy and unambiguous to convert a date to this string using either the toJSON() or the toISOString() methods of Date, as well as to convert it back to a date using new Date(dateString).
+The recommended string format for transferring Date objects in a JSON is the ISO 8601 format. It is also the same format used by JavaScript Date’s toJSON() method. In this format, a date such as 26 January 2019, 2:30 PM UTC would be written as 2019-01-26T14:30:00.000Z. It is easy and unambiguous to convert a date to this string using either the toJSON() or the toISOString() methods of Date, as well as to convert it back to a date using new Date(dateString).
 
 Although GraphQL does not support dates natively, it has support for custom scalar types, which can be
 used for creating a custom scalar type date. To be able to use a custom scalar type, the following has to be done:
@@ -11,7 +11,7 @@ used for creating a custom scalar type date. To be able to use a custom scalar t
 1. Define a type for the scalar using the scalar keyword instead of the type keyword in the schema.
 2. Add a top-level resolver for all scalar types, which handles both serialization (on the way out) as well as parsing (on the way in) via class methods.
 After these, the new type can be used just as any native scalar type like String and Int would be used.
-Let’s call the new scalar type GraphQLDate. The scalar type has to be defined as such in the schema using thescalar keyword followed by the name of the custom type. Let’s put this in the beginning of the file. Now, we can replace the String type association with the created and due fields with GraphQLDate. 
+Let’s call the new scalar type GraphQLDate. The scalar type has to be defined as such in the schema using the scalar keyword followed by the name of the custom type. Let’s put this in the beginning of the file. Now, we can replace the String type association with the created and due fields with GraphQLDate. 
 
 <pre>
 <b>scalar GraphQLDate</b>
@@ -20,7 +20,7 @@ type Issue {
   id: Int!
   ...
   created: <del>String!</del><b>GraphQLDate</b>
-  due: <del>Strign!</del><b>GraphQlDate</b>
+  due: <del>Strign!</del><b>GraphQLDate</b>
 }
 ...
 </pre>
