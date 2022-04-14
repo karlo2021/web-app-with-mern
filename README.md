@@ -52,7 +52,7 @@ variable called issues, like this:
 ```js
 ...
   const result = await response.json();
-  this.setState({ issue: result.data.issueList })
+  this.setState({ issues: result.data.issueList })
 ...
 ```
 
