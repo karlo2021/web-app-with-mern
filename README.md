@@ -1,15 +1,17 @@
-# Create API Integration
+# Create API 
 
-Let’s start the integration of the Create API with a minor change in the defaulting of the new issue in the UI. Let’s remove setting the status to 'New' and set the due date to 10 days from the current date. This change can be done in the handleSubmit() method in the IssueAdd
+In this section, we will implement an API for creating a new issue in the server, which will be appended to the list of issues in the server’s memory.
+To do this, we have to first define a field in the schema under Mutation called issueAdd. This field should take arguments, just as the setAboutMessage field did. But this time, we need multiple arguments, one for each property of the issue being added. Alternatively, we can define a new type as an object that
+has the fields we need for the input. This can’t be the same as the Issue type because it has some required fields (id and created) that are not part of the input. These are values that are set by the server only. Further, GraphQL needs a different specification when it comes to input types. Instead of using the type keyword, we
+have to use the input keyword. Let’s first define this new input type called IssueInputs in the schema:
 
-<pre>
+```js
 ...
-const issue = {
-  owner: form.owner.value, title: form.title.value, <del>status: 'New'</del>,
-  <b>due: new Date(new Date().getTime() + 1000*60*60*24*10)</b>
-};
+input IssueInput {
+  # ... fileds of Issue
+}
 ...
-</pre>
+```
 
 We discussed how to add comments in the schema. But these comments are not formal descriptions of the types or subfields. For real documentation that is shown part of the schema explorer, a string above the field needs to be added. When the schema is shown to an exploring developer, these descriptions will appear as helpful hints. So, let’s add a description for IssueInputs as well as for the property status, saying it will be defaulted to the value 'New' if not supplied:
   
