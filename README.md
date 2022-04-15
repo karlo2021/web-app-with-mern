@@ -81,7 +81,7 @@ Finally, we can append the issue to the global variable issuesDB and return the 
 
 ```js
 ...
-issueDB.push(issue);
+issuesDB.push(issue);
 return issue;
 ...
 ```
