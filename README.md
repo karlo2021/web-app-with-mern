@@ -69,7 +69,7 @@ In the function, let’s set the ID and the created date as we did in the browse
 ...
 ```
 
-Further, let’s also default the status, if not supplied (since we have not declared it as a required subfield to the value 'New':
+Further, let’s also default the status, if not supplied (since we have not declared it as a required subfield) to the value 'New':
 
 ```js
 ...
@@ -156,12 +156,40 @@ const resolver = {
 
 Now we are ready to test the Create API using the Playground. If you explore the schema in the Playground (a browser refresh may be needed) and drill down to the status field of IssueInputs, you will find the descriptions that we provided in the schema. 
 
-
+![schema-showing](./resources/schema-showing.JPG)
 
 To test the addition of a new issue, you can use the following query in the Playground:
 <hr>
-
+```js
+mutation {
+  issueAdd(
+    issue: {
+      title: "Completion date should be optional"
+      owner: "Pieta"
+      due: "2018-12-13"
+    }
+  ) {
+    id
+    due
+    created
+    status
+  }
+}
+```
 Running this query should give the following result in the result window of the Playground:
 <hr>
+
+```js
+{
+  "data": {
+    "issueAdd": {
+      "id": 3,
+      "due": "2018-12-13T00:00:00.000Z",
+      "created": "2022-04-16T07:27:11.439Z",
+      "status": "New"
+    }
+  }
+}
+```
 
 This shows that the due date has been properly parsed and converted. The status field also has been defaulted to 'New' as expected. You can also confirm that the issue has been created by running a query for issueList in the Playground and checking the results.

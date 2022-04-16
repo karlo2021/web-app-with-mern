@@ -8,6 +8,15 @@ type Issue {
   due: GraphQLDate
 }
 
+"Toned down Issue, used as inputs, widouth server generated values"
+input IssueInput {
+  title: String!
+  "Optional, if not specified, will be set to 'New'"
+  status: String
+  owner: String
+  effort: String
+  due: GraphQLDate
+}
 scalar GraphQLDate
 
 ##### Top level declarations
@@ -18,5 +27,6 @@ type Query {
 }
 
 type Mutation {
-  setAboutMessage(message: String!): String
+  setAboutMessage(message: String!): String!
+  issueAdd(issue: IssueInput!): Issue!
 }
