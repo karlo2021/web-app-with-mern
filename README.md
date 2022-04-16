@@ -160,6 +160,7 @@ Now we are ready to test the Create API using the Playground. If you explore the
 
 To test the addition of a new issue, you can use the following query in the Playground:
 <hr>
+
 ```js
 mutation {
   issueAdd(
