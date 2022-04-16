@@ -156,7 +156,7 @@ const resolver = {
 
 Now we are ready to test the Create API using the Playground. If you explore the schema in the Playground (a browser refresh may be needed) and drill down to the status field of IssueInputs, you will find the descriptions that we provided in the schema. 
 
-![schema-showing](./resources/schema-showing.JPG)
+![schema-showing](./resources/schema-showing-status.JPG)
 
 To test the addition of a new issue, you can use the following query in the Playground:
 <hr>
