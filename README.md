@@ -176,6 +176,7 @@ mutation {
   }
 }
 ```
+
 Running this query should give the following result in the result window of the Playground:
 <hr>
 
