@@ -22,7 +22,7 @@ We need to send across the variables as a JSON object with the name of the varia
 
 A screenshot of the Playground, with the value of the message as "Hello World!" is shown.
 
-
+![playground-variables](./resources/playground-variables.JPG)
 
 If you inspect the request data in the Developer Console, you will find that the request JSON has three properties—operationName, variables, and query. While we were using only the query until now, to take advantage of variables, we’ve had to use the other two as well.
 
@@ -72,3 +72,5 @@ async createIssue(issue) {
 </pre>
 
 On testing these changes in the Issue Tracker application, you will find that adding a new issue works as before. Further, you should be able to use double quotes in the title of a newly added issue without causing any errors.
+
+[!quotes-in-title](./resources/quotes-in-title.JPG)

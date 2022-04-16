@@ -103,12 +103,19 @@ class IssueList extends React.Component {
     const result = JSON.parse(body, jsonDateReviver);
     this.setState({ issues: result.data.issueList });
   }
-  createIssue(issue) {
-    issue.id = this.state.issues.length + 1;
-    issue.created = new Date();
-    const newIssueList = this.state.issues.slice();
-    newIssueList.push(issue);
-    this.setState({ issues: newIssueList });
+  async createIssue(issue) {
+    const query = `mutation issueAdd($issue: IssueInput!) {
+      issueAdd(issue: $issue) {
+        id
+      }
+    }`;
+    
+    const response = await fetch('/graphql', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ query, variables: { issue } })
+    });
+    this.loadData();
   }
   render() {
     return (
