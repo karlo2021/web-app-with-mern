@@ -61,7 +61,8 @@ class IssueAdd extends React.Component {
     e.preventDefault();
     const form = document.forms.issueAdd;
     const issue = {
-      owner: form.owner.value, title: form.title.value, status: 'New'
+      owner: form.owner.value, title: form.title.value, 
+      due: new Date(new Date().getTime() + 1000*60*60*24*10),
     };
     this.props.createIssue(issue);
     form.owner.value= ""; form.title.value= "";
@@ -103,13 +104,25 @@ class IssueList extends React.Component {
     const result = JSON.parse(body, jsonDateReviver);
     this.setState({ issues: result.data.issueList });
   }
-  createIssue(issue) {
-    issue.id = this.state.issues.length + 1;
-    issue.created = new Date();
-    const newIssueList = this.state.issues.slice();
-    newIssueList.push(issue);
-    this.setState({ issues: newIssueList });
+  async createIssue(issue) {
+    const query = `mutation {
+      issueAdd(issue:{
+        title: "${issue.title}",
+        owner: "${issue.owner}",
+        due: "${issue.due.toISOString()}",
+      }) {
+        id
+      }
+    }`;
+
+    const response = await fetch('/graphql', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json'},
+      body: JSON.stringify({ query })
+    });
+    this.loadData();
   }
+
   render() {
     return (
       <React.Fragment>
