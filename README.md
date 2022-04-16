@@ -74,3 +74,5 @@ async createIssue(issue) {
 On testing these changes in the Issue Tracker application, you will find that adding a new issue works as before. Further, you should be able to use double quotes in the title of a newly added issue without causing any errors.
 
 [!quotes-in-title](./resources/quotes-in-title.JPG)
+
+
