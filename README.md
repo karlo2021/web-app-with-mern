@@ -105,7 +105,7 @@ the status is set to Assigned. The UI has no way of setting the status field at 
 ```js
 ...
     if (issue.status == 'Assigned' && !issue.owner) {
-        errors.push('Field "owner" is required when statusis "Assigned"');
+        errors.push('Field "owner" is required when status is "Assigned"');
     }
 ...
 ```
@@ -208,6 +208,125 @@ const server = new ApolloServer ({
 </pre>
 
 Testing these changes using the application is going to be hard, requiring temporary code changes, so
-you can use the Playground to test the validations. Note that since status is now an enum, the value should
-be supplied as a literal, i.e., without quotes in the Playground. A valid call to issueAdd will look like this:
+you can use the Playground to test the validations. Note that since status is now an enum, the value should be supplied as a literal, i.e., without quotes in the Playground. A valid call to issueAdd will look like this:
+
+```js
+mutation {
+  issueAdd(
+    issue: {
+      title: "Completion date should be optional"
+      status: New,
+    }
+  ) {
+    id
+    status
+  }
+}
+```
+
+<hr>
+On running this code, Playground results should show the following new issue added:
+
+```json
+{
+  "data": {
+    "issueAdd": {
+      "id": 3,
+      "status": "New"
+    }
+  }
+}
+```
+
+<hr>
+If you change the status to an invalid enum like Unknown, you should get back an error like this:
+
+```js
+{
+  "error": {
+    "errors": [
+      {
+        "message": "Expected type StatusType, found Unknown.",
+```
+
+<hr>
+If you use a string "New" instead, it should show a helpful error message like this:
+
+```js
+{
+  "error": {
+    "errors": [
+      {
+        "message": "Expected type StatusType, found \"New\"; Did you mean the enum value New?",
+```
+
+<hr>
+Finally, if you remove the status altogether, you will find that it does default the value to New as seen in the result window.
+For testing the programmatic validations, you can try to create an issue where both checks will fail. The
+following query should help with that:
+
+```js
+mutation {
+  issueAdd(
+    issue: {
+      title: "Co",
+      status: Assigned,
+    }
+  ) {
+    id
+    status
+  }
+}
+```
+On running this query, the following error will be returned, where both the messages are listed under
+the exception section.
+
+```js
+"extensions": {
+  "errors": [
+    "Field \"Title\" must be at least 3 characters long",
+    "Field \"owner\" is required when status is \"Assigned\""
+```
+
+<hr>
+
+To test the date validations, you need to test both using literals and query variables. For the literal test, you can use the following query:
+
+```
+mutation {
+  issueAdd(
+    issue: {
+      title: "Completion data should be optional",
+      due: "not-a-date",
+    }
+  ) {
+    id
+  }
+}
+```
+
+The following error will be returned:
+
+```js
+"errors": [
+  {
+    "message": "Expected type GraphQLDate, found \"not-a-date\".",
+```
+
+<hr>
+As for the query variable based test, here’s the query that can be used:
+
+```js
+mutation issueAddOperation($issue: IssueInputs!) {
+  issueAdd(issue: $issue) {
+    id
+    status
+    due
+  }
+}
+```
+
+And this is the query variables:
+
+`{"issue":{"title":"test", "due":"not-a-date"}}`
 
