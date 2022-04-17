@@ -163,6 +163,22 @@ class IssueList extends React.Component {
 To test transport errors, you can stop the server after refreshing the browser and then try to add a new
 issue. If you do that, you will find the error message like the screenshot:
 
+![connection-lost](./resources/connection-lost.JPG)
+
 As for the other messages, the length of title can be tested by typing a small title in the user input. The other validations have to be tested only by temporarily changing the code, for example, by setting the status to the desired value and setting the due field to an invalid date string etc. within the IssueAdd component’s handleSubmit() method.
 
+![title-invalid](./resources/title-invalid.JPG)
+
+
 ## Summary
+
+In this chapter, we compared two API standards: REST and GraphQL. Although REST is widely used, we
+chose GraphQL for the features and ease of implementation, given that there are tools and libraries to help us build the APIs.
+GraphQL is an extremely structured API standard and is quite extensive. I covered only the basics of
+GraphQL, which only included the features that were required for the Issue Tracker application at this stage. I encourage you to read more on GraphQL at https://graphql.org/. There are advanced features such
+as directives and fragments, which can be helpful in reusing code for building queries. These can be quite handy in a larger project, but I will not cover these as part of this book as they are not really required for the Issue Tracker application.
+Using GraphQL, you saw how to build the C and R part of CRUD in this chapter. You also saw how easy
+some of the validations were to implement and how the strong type system of GraphQL helps avoid errors
+and makes the APIs self-documenting. 
+We will deal with U and D part of CRUD in later chapters, as and
+when we build those features. In the meantime, it would be a good idea to see how to persist the data. We moved the array of issues from the browser’s memory to the server’s memory. In the next chapter, we’ll move it further, to a real database, MongoDB.
