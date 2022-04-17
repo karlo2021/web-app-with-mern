@@ -182,3 +182,14 @@ some of the validations were to implement and how the strong type system of Grap
 and makes the APIs self-documenting. 
 We will deal with U and D part of CRUD in later chapters, as and
 when we build those features. In the meantime, it would be a good idea to see how to persist the data. We moved the array of issues from the browser’s memory to the server’s memory. In the next chapter, we’ll move it further, to a real database, MongoDB.
+
+## Q&A
+
+What are the pros and cons of using GET vs. POST for read-only API calls?
+
+The browser can cache GET requests and return the response from the cache itself. Different browsers behave differently and it’s hard to predict the right behavior. Normally, you would want API results to never be cached, instead always fetched from the server. In such cases, using POST is safe, since browsers don’t cache the results of a POST.
+But in case you really want the browser to cache certain API responses where possible, because the result is large and doesn’t change (e.g., images), GET is the only option. Or, you could use POST but deal with caching yourself (e.g., by using local storage) rather than let the browser handle it.
+
+How would an aggregated query look, one that includes the list of issues as well as the about field?
+
+The query can be like query { about issueList { id title created } }. In the result, you can see that both about and issueList are returned as properties of the data object.
