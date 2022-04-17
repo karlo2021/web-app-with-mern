@@ -330,3 +330,10 @@ And this is the query variables:
 
 `{"issue":{"title":"test", "due":"not-a-date"}}`
 
+```js
+{
+  "error": {
+    "errors": [
+      {
+        "message": "Variable \"$issue\" got invalid value {\"title\":\"test\",\"due\":\"not-a-date\"}; Expected type GraphQLDate at value.due.",
+```
