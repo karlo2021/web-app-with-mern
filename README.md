@@ -84,7 +84,7 @@ this in a separate function called validateIssue(). Let’s first create an arra
 
 <pre>
 ...
-function validateIssue(_, { issue }) {
+function validateIssue( issue ) {
     <b>const errors = [];</b>
 ...
 </pre>
@@ -224,7 +224,6 @@ mutation {
 }
 ```
 
-<hr>
 On running this code, Playground results should show the following new issue added:
 
 ```json
@@ -239,6 +238,7 @@ On running this code, Playground results should show the following new issue add
 ```
 
 <hr>
+
 If you change the status to an invalid enum like Unknown, you should get back an error like this:
 
 ```js
@@ -250,6 +250,7 @@ If you change the status to an invalid enum like Unknown, you should get back an
 ```
 
 <hr>
+
 If you use a string "New" instead, it should show a helpful error message like this:
 
 ```js
@@ -261,6 +262,7 @@ If you use a string "New" instead, it should show a helpful error message like t
 ```
 
 <hr>
+
 Finally, if you remove the status altogether, you will find that it does default the value to New as seen in the result window.
 For testing the programmatic validations, you can try to create an issue where both checks will fail. The
 following query should help with that:
@@ -278,6 +280,7 @@ mutation {
   }
 }
 ```
+
 On running this query, the following error will be returned, where both the messages are listed under
 the exception section.
 
@@ -314,6 +317,7 @@ The following error will be returned:
 ```
 
 <hr>
+
 As for the query variable based test, here’s the query that can be used:
 
 ```js
@@ -330,6 +334,8 @@ And this is the query variables:
 
 `{"issue":{"title":"test", "due":"not-a-date"}}`
 
+On running this, you should see the following error in the result window:
+
 ```js
 {
   "error": {
@@ -337,3 +343,5 @@ And this is the query variables:
       {
         "message": "Variable \"$issue\" got invalid value {\"title\":\"test\",\"due\":\"not-a-date\"}; Expected type GraphQLDate at value.due.",
 ```
+
+<hr>
