@@ -132,20 +132,20 @@ The result of this command will show you the result of the operation and the ID 
 
 Apart from the insertOne() method, many methods are available on any collection. You can see the list of available methods by pressing the Tab character twice after typing "db.employees." (the period at the end is required before pressing Tab). You may find an output like the following:
 <hr>
-db.employees.constructor&nbsp;&nbsp;&nbsp;&nbsp;                db.employees.hasOwnProperty<br/>
-db.employees.isPrototypeOf&nbsp;&nbsp;&nbsp;&nbsp;              db.employees.propertyIsEnumerable<br/>
-db.employees.toString&nbsp;&nbsp;&nbsp;&nbsp;                   db.employees.valueOf<br/>
-db.employees.bulkWrite&nbsp;&nbsp;&nbsp;&nbsp;                  db.employees.countDocuments<br/>
-db.employees.deleteOne&nbsp;&nbsp;&nbsp;&nbsp;                  db.employees.distinct<br/>
-db.employees.find  &nbsp;&nbsp;&nbsp;&nbsp;                      db.employees.findOne<br/>
-db.employees.findOneAndDelete  &nbsp;&nbsp;&nbsp;&nbsp;          db.employees.findOneAndReplace<br/>
-db.employees.insertMany  &nbsp;&nbsp;&nbsp;&nbsp;                db.employees.insertOne<br/>
-db.employees.replaceOne    &nbsp;&nbsp;&nbsp;&nbsp;              db.employees.updateMany<br/>
-db.employees.convertToCapped   &nbsp;&nbsp;&nbsp;&nbsp;          db.employees.createIndexes<br/>
-db.employees.ensureIndex   &nbsp;&nbsp;&nbsp;&nbsp;              db.employees.getIndexes<br/>
-db.employees.getIndices     &nbsp;&nbsp;&nbsp;&nbsp;             db.employees.getIndexKeys<br/>
-db.employees.dropIndex     &nbsp;&nbsp;&nbsp;&nbsp;              db.employees.totalIndexSize<br/>
-db.employees.getMongo       &nbsp;&nbsp;&nbsp;&nbsp;             db.employees.dataSize<br/>
+db.employees.constructor<br/>
+db.employees.isPrototypeOf<br/>
+db.employees.toStringf<br/>
+db.employees.bulkWrite<br/>
+db.employees.deleteOne<br/>
+db.employees.find<br/>
+db.employees.findOneAndDelete<br/>
+db.employees.insertMany<br/>
+db.employees.replaceOne<br/>
+db.employees.convertToCapped<br/>
+db.employees.ensureIndex<br/>
+db.employees.getIndices<br/>
+db.employees.dropIndex<br/>
+db.employees.getMongo<br/>
 ...
 <hr>
 
