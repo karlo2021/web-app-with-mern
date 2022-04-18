@@ -88,3 +88,11 @@ MongoDB server version: 4.0.2<br />
 <hr>
 You do need to see the prompt > where you can type further commands. If, instead, you see an error message, revisit the installation and the server starting procedure.
 
+### The Mongo Shell
+
+The mongo shell is an interactive JavaScript shell, very much like the Node.js shell. In this section, we’ll discuss the basic operations that are possible via the shell, those that are most commonly used. For a full reference of all the capabilities of the shell, you can take a look at the mongo shell documentation at
+https://docs.mongodb.com/manual/mongo/.
+
+To work with MongoDB, you need to connect to a database. Let’s start with finding which databases are available. The command to show the current databases is:
+
+` > show database `
