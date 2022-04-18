@@ -94,5 +94,29 @@ The mongo shell is an interactive JavaScript shell, very much like the Node.js s
 https://docs.mongodb.com/manual/mongo/.
 
 To work with MongoDB, you need to connect to a database. Let’s start with finding which databases are available. The command to show the current databases is:
+` > show databases `
 
-` > show database `
+This will list the databases and the storage occupied by them. For example, in a fresh local installation of MongoDB, this is what you will see:
+<hr>
+admin 0.000GB<br/>
+config 0.000GB<br/>
+local 0.000GB<br/>
+<hr>
+These are system databases that MongoDB uses for its internal book keeping, etc. We will not be using any of these to create our collections, so we’d better change the current database. To identify the current database, the command is:
+` > db `
+
+The default database a mongo shell connects to is called test and that is what you are likely to see as the output to this command. Let’s now see what collections exist in this database.
+` > show collections `
+
+You will find that there are no collections in this database, since it is a fresh installation. Further, you will also find that the database test was not listed when we listed the available databases. That’s because databases and collections are really created only on the first write operation to any of these. Let’s switch to a database called issuetracker instead of using the default database:
+` > use issuetracker `
+
+This should result in output that confirms that the new database is issuetracker:
+<hr>
+switched to db issuetracker
+<hr>
+
+Let’s confirm that there are no collections in this database either:
+` > show collections `
+
+This command should return nothing. Now, let’s create a new collection. This is done by creating one document in a collection. A collection is referenced as a property of the global object db, with the same name as the collection. The collection called employees can be referred to as db.employees. Let’s insert a new document in the employees collection using the insertOne() method. This method takes in the document to be inserted as an argument:
