@@ -195,7 +195,7 @@ In Node.js, the console.log method is available for printing objects on the cons
 
 Now, you should see the name object expanded into first and last names, like the following:
 <hr>
-{ first: 'John', last: 'Doe' }
+{ first: 'John', last: 'Doe' }<br/>
 { first: 'Jane', last: 'Doe' }
 <hr>
 
