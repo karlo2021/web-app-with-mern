@@ -125,27 +125,27 @@ This command should return nothing. Now, let’s create a new collection. This i
 The result of this command will show you the result of the operation and the ID of the new document that was created, something like this:
 <hr>
 {<br/>
-  acknowledged: true,<br/>
-  insertedId: ObjectId("625d309b3860256806deb1bb")<br/>
+&nbsp;&nbsp;  acknowledged: true,<br/>
+&nbsp;&nbsp;  insertedId: ObjectId("625d309b3860256806deb1bb")<br/>
 }
 <hr>
 
 Apart from the insertOne() method, many methods are available on any collection. You can see the list of available methods by pressing the Tab character twice after typing "db.employees." (the period at the end is required before pressing Tab). You may find an output like the following:
 <hr>
-db.employees.constructor                db.employees.hasOwnProperty<br/>
-db.employees.isPrototypeOf              db.employees.propertyIsEnumerable<br/>
-db.employees.toString                   db.employees.valueOf<br/>
-db.employees.bulkWrite                  db.employees.countDocuments<br/>
-db.employees.deleteOne                  db.employees.distinct<br/>
-db.employees.find                       db.employees.findOne<br/>
-db.employees.findOneAndDelete           db.employees.findOneAndReplace<br/>
-db.employees.insertMany                 db.employees.insertOne<br/>
-db.employees.replaceOne                 db.employees.updateMany<br/>
-db.employees.convertToCapped            db.employees.createIndexes<br/>
-db.employees.ensureIndex                db.employees.getIndexes<br/>
-db.employees.getIndices                 db.employees.getIndexKeys<br/>
-db.employees.dropIndex                  db.employees.totalIndexSize<br/>
-db.employees.getMongo                   db.employees.dataSize<br/>
+db.employees.constructor&nbsp;&nbsp;&nbsp;&nbsp;                db.employees.hasOwnProperty<br/>
+db.employees.isPrototypeOf&nbsp;&nbsp;&nbsp;&nbsp;              db.employees.propertyIsEnumerable<br/>
+db.employees.toString&nbsp;&nbsp;&nbsp;&nbsp;                   db.employees.valueOf<br/>
+db.employees.bulkWrite&nbsp;&nbsp;&nbsp;&nbsp;                  db.employees.countDocuments<br/>
+db.employees.deleteOne&nbsp;&nbsp;&nbsp;&nbsp;                  db.employees.distinct<br/>
+db.employees.find  &nbsp;&nbsp;&nbsp;&nbsp;                      db.employees.findOne<br/>
+db.employees.findOneAndDelete  &nbsp;&nbsp;&nbsp;&nbsp;          db.employees.findOneAndReplace<br/>
+db.employees.insertMany  &nbsp;&nbsp;&nbsp;&nbsp;                db.employees.insertOne<br/>
+db.employees.replaceOne    &nbsp;&nbsp;&nbsp;&nbsp;              db.employees.updateMany<br/>
+db.employees.convertToCapped   &nbsp;&nbsp;&nbsp;&nbsp;          db.employees.createIndexes<br/>
+db.employees.ensureIndex   &nbsp;&nbsp;&nbsp;&nbsp;              db.employees.getIndexes<br/>
+db.employees.getIndices     &nbsp;&nbsp;&nbsp;&nbsp;             db.employees.getIndexKeys<br/>
+db.employees.dropIndex     &nbsp;&nbsp;&nbsp;&nbsp;              db.employees.totalIndexSize<br/>
+db.employees.getMongo       &nbsp;&nbsp;&nbsp;&nbsp;             db.employees.dataSize<br/>
 ...
 <hr>
 
