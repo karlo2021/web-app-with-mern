@@ -98,9 +98,8 @@ To work with MongoDB, you need to connect to a database. Let’s start with find
 
 This will list the databases and the storage occupied by them. For example, in a fresh local installation of MongoDB, this is what you will see:
 <hr>
-admin 0.000GB<br/>
-config 0.000GB<br/>
-local 0.000GB<br/>
+admin   377 kB<br/>
+local  9.44 GB<br/>
 <hr>
 These are system databases that MongoDB uses for its internal book keeping, etc. We will not be using any of these to create our collections, so we’d better change the current database. To identify the current database, the command is:
 ` > db `
@@ -120,3 +119,33 @@ Let’s confirm that there are no collections in this database either:
 ` > show collections `
 
 This command should return nothing. Now, let’s create a new collection. This is done by creating one document in a collection. A collection is referenced as a property of the global object db, with the same name as the collection. The collection called employees can be referred to as db.employees. Let’s insert a new document in the employees collection using the insertOne() method. This method takes in the document to be inserted as an argument:
+
+` > db.employeesinserOne({ name: { firstName: 'John', lastName: 'Doe' }, age: 44 }) `
+
+The result of this command will show you the result of the operation and the ID of the new document that was created, something like this:
+<hr>
+{
+  acknowledged: true,
+  insertedId: ObjectId("625d309b3860256806deb1bb")
+}
+<hr>
+
+Apart from the insertOne() method, many methods are available on any collection. You can see the list of available methods by pressing the Tab character twice after typing "db.employees." (the period at the end is required before pressing Tab). You may find an output like the following:
+<hr>
+db.employees.constructor                db.employees.hasOwnProperty
+db.employees.isPrototypeOf              db.employees.propertyIsEnumerable
+db.employees.toString                   db.employees.valueOf
+db.employees.bulkWrite                  db.employees.countDocuments
+db.employees.deleteOne                  db.employees.distinct
+db.employees.find                       db.employees.findOne
+db.employees.findOneAndDelete           db.employees.findOneAndReplace
+db.employees.insertMany                 db.employees.insertOne
+db.employees.replaceOne                 db.employees.updateMany
+db.employees.convertToCapped            db.employees.createIndexes
+db.employees.ensureIndex                db.employees.getIndexes
+db.employees.getIndices                 db.employees.getIndexKeys
+db.employees.dropIndex                  db.employees.totalIndexSize
+db.employees.getMongo                   db.employees.dataSize
+...
+<hr>
+
