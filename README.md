@@ -71,6 +71,20 @@ sandbox kind of option is not available.
 
 Of these three, I find Atlas the most convenient because there are many options for the location of the host. When connecting to the database, it lets me choose one closest to my location, and that minimizes the latency. mLab does not give a cluster—a database can be created individually. Compose is not permanently
 free.
+The downside of any of the hosted options is that, apart from the small extra latency when accessing the database, you need an Internet connection. Which means that you may not be able to test your code where Internet access is not available, for example, on a flight. In comparison, installing MongoDB on your computer may work better, but the installation takes a bit more work than signing up for one of the cloudbased options. Even when using one of the cloud options, you will need to download and install the mongo shell to be able to access the database remotely.
+If you choose to install MongoDB on your computer (it can be installed easily on OS X, Windows, and most distributions based on Linux), look up the installation instructions, which are different for each operating system. You may install MongoDB by following the instructions at the MongoDB website
+(https://docs.mongodb.com/manual/installation/ or search for “mongodb installation” in your search engine). Most local installation options let you install the server, the shell, and tools all in one. Check that this is the case; if not, you may have to install them separately.
+After a local installation, ensure that you have started MongoDB server (the name of the daemon or service is mongod), if it is not already started by the installation process. Test the installation by running the mongo shell like this:
 
+`$mongo `
 
+On a Windows system, you may need to append .exe to the command. The command may require a path depending on your installation method. If the shell starts successfully, it will also connect to the local MongoDB server instance. You should see the version of MongoDB printed on the console, the database it is
+connecting to (the default is test), and a command prompt, like this, if you had installed MongoDB version 4.0.2 locally:
+<hr>
+MongoDB shell version v4.0.2
+connecting to: mongodb://127.0.0.1:27017
+MongoDB server version: 4.0.2
+>
+<hr>
+You do need to see the prompt > where you can type further commands. If, instead, you see an error message, revisit the installation and the server starting procedure.
 
