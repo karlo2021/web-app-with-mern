@@ -169,3 +169,35 @@ That should show a much more legible output, like this:
   }
 ]
 ```
+
+At this point in time, if you execute show collections and show databases, you will find that the employees collection and the issuetracker database have indeed been created and are listed in the output of their respective commands. Let’s insert another document in the same collection and try to deal with multiple documents in the collection:
+
+` > db.employees.insertOne({ name: { first: 'Jane', last: 'Doe' }, age: 54 }) `
+
+Now, since we have the full power of JavaScript in the shell, let’s try to exercise some of it to get a taste. Instead of printing the results onscreen, let’s collect the results into a JavaScript array variable. The result of the find() method was a cursor that could be iterated. In the cursor object, there are methods other than
+pretty(), one of which is toArray(). This method reads all the documents from the query and places them in an array. So, let’s use this method and assign its result to an array variable.
+
+` > let result = db.employees.find().toArray() `
+
+Now, the variable result should be an array with two elements, each an employee document. Let’s use the JavaScript array method forEach() to iterate through them and print the first names of each employee:
+
+` > result.forEach((e) => print('First Name':, e.first.name)) `
+
+This should give an output like this:
+<hr>
+First Name: John<br/>
+First Name: Jane<br/>
+<hr>
+
+In Node.js, the console.log method is available for printing objects on the console. The mongo shell, on the other hand, provides the print() method for the same purpose, but this prints only strings. Objects need to be converted to strings before printing, using the utility function tojson(). There is also another method, called printjson(), which prints objects as JSON. Let’s use that to inspect the contents of the nested document name instead of only the first name:
+
+` > result.forEach((e) => printjson(e.name)) `
+
+Now, you should see the name object expanded into first and last names, like the following:
+<hr>
+{ first: 'John', last: 'Doe' }
+{ first: 'Jane', last: 'Doe' }
+<hr>
+
+The shell by itself does very little apart from providing a mechanism to access methods of the database and collections. It is the JavaScript engine, which forms the basis of the shell and gives a lot of flexibility and power to the shell.
+In the next section, we will discuss more methods on the collection, such as insertOne() that you just learned about. These methods are accessible from many programming languages via a driver. The mongo shell is just another tool that can access these methods. You will find that the methods and arguments available in other programming languages are very similar to those in the mongo shell.
