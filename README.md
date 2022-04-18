@@ -149,3 +149,23 @@ db.employees.getMongo<br/>
 ...
 <hr>
 
+This is the auto-completion feature of the mongo shell at work. Note that you can let the mongo shell auto-complete the name of any method by pressing the Tab character after entering the beginning few characters of the method.
+Let’s now check if the document has been created in the collection. To do that, we can use the find() method on the collection. Without any arguments, this method just lists all the documents in the collection:
+
+` > db.employees.find() `
+
+This should result in displaying the document we just created, but it is not "pretty" formatted. It will be printed all in one line and may wrap around to the next line inconveniently. To get a more legible output, we can use the pretty() method on the result of the find() method:
+
+` > db.employees.find().pretty() `
+
+That should show a much more legible output, like this:
+
+```js
+[
+  {
+    _id: ObjectId("625d309b3860256806deb1bb"),
+    name: { first: 'John', last: 'Doe' },
+    age: 44
+  }
+]
+```
