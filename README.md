@@ -81,9 +81,9 @@ After a local installation, ensure that you have started MongoDB server (the nam
 On a Windows system, you may need to append .exe to the command. The command may require a path depending on your installation method. If the shell starts successfully, it will also connect to the local MongoDB server instance. You should see the version of MongoDB printed on the console, the database it is
 connecting to (the default is test), and a command prompt, like this, if you had installed MongoDB version 4.0.2 locally:
 <hr>
-MongoDB shell version v4.0.2
-connecting to: mongodb://127.0.0.1:27017
-MongoDB server version: 4.0.2
+MongoDB shell version v4.0.2<br />
+connecting to: mongodb://127.0.0.1:27017<br />
+MongoDB server version: 4.0.2<br />
 >
 <hr>
 You do need to see the prompt > where you can type further commands. If, instead, you see an error message, revisit the installation and the server starting procedure.
