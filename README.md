@@ -1,4 +1,4 @@
-# MongoDB CRUD Operations
+# MongoDB Node.js Driver
 
 This is the Node.js driver that lets you connect and interact with the MongoDB server. It provides methods very similar to what you saw in the mongo shell, but not exactly the same. Instead of the low-level MongoDB driver, we could use an Object Document Mapper called Mongoose, which has a higher level of abstraction and more convenient methods. But learning about the lower-level MongoDB driver may give you a better handle on the actual working of MongoDB itself, so I’ve chosen to use the low-level driver for the Issue Tracker application. To start, let’s install the driver:
 
