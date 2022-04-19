@@ -196,3 +196,18 @@ Now, we are ready to test the trial program we just created. It can be executed 
 `$ node scripts/trymongo.js `
 
 This should result in output like this (you will see a different ObjectID, otherwise the output should be the same):
+
+```js
+Connected to db
+Result of insert:
+ 625ed80ba56e5a034c2adb91
+Result of find:
+ [
+  {
+    _id: 625ed80ba56e5a034c2adb91,
+    id: 1,
+    name: 'A. Callback',
+    age: 23
+  }
+]
+```
