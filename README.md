@@ -196,4 +196,3 @@ Now, we are ready to test the trial program we just created. It can be executed 
 `$ node scripts/trymongo.js `
 
 This should result in output like this (you will see a different ObjectID, otherwise the output should be the same):
-
