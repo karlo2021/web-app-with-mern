@@ -191,8 +191,7 @@ If you are using a remote server from one of the hosting providers, instead of t
 
 ` $ mongo "mongodb+srv://cluster0-xxxxx.mongodb.net/issuetracker" --username atlasUser --password atlasPassword --eval "db.employees.remove({})"`
 
-Mine example:
-` mongosh "mongodb+srv://cluster0.wpj19.mongodb.net/issuetracker" --username karlo --password mernstack2021 --eval "db.employees.remove({})" `
+ > Example: mongosh "mongodb+srv://cluster0.wpj19.mongodb.net/issuetracker" --username karlo --password mernstack2021 --eval "db.employees.remove({})"
 
 Now, we are ready to test the trial program we just created. It can be executed like this:
 
