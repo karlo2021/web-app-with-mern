@@ -191,6 +191,9 @@ If you are using a remote server from one of the hosting providers, instead of t
 
 ` $ mongo "mongodb+srv://cluster0-xxxxx.mongodb.net/issuetracker" --username atlasUser --password atlasPassword --eval "db.employees.remove({})"`
 
+Mine example:
+` mongosh "mongodb+srv://cluster0.wpj19.mongodb.net/issuetracker" --username karlo --password mernstack2021 --eval "db.employees.remove({})" `
+
 Now, we are ready to test the trial program we just created. It can be executed like this:
 
 `$ node scripts/trymongo.js `
@@ -211,3 +214,96 @@ Result of find:
   }
 ]
 ```
+
+As you probably felt yourself, the callback paradigm is a bit unwieldy. But the advantage is that it works in the older JavaScript version (ES5), and therefore, older versions of Node.js. The callbacks are bit too deeply nested and the error handling makes for repetitive code. ES2015 started supporting Promises, which is supported by the Node.js MongoDB driver as well, and this was an improvement over callbacks. But in ES2017 and Node.js from version 7.6, full support for the async/await paradigm appeared, and this is the recommended and most convenient way to use the driver.
+Let’s implement another function called testWithAsync() within trymongo.js that uses the async/await paradigm. All asynchronous calls with a callback can now be replaced by a call to the same method, but without supplying a callback. Using await before the method call will simulate a synchronous call by waiting for the call to complete and return the results. For example, instead of passing a callback to
+the connect() method, we can just wait for it to complete.
+Right in the next line, we can do whatever needs to be done after the operation is completed, in this
+case, get a connection to the database:
+
+<pre>
+...
+  await client.connect();
+  <b>const db = client.db();</b>
+...
+</pre>
+
+The same pattern can be used for the other asynchronous calls, with one change: the result of the call,
+which was originally the second argument of the callback, can directly be assigned to a variable like a return value from the function call. So, the result of insertOne() can be captured like this:
+
+```js
+...
+const result = await collection.insertOne(employee);
+...
+```
+
+Errors will be thrown and can be caught. We can place all the operations in a single try block and catch
+any error in one place (the catch block) rather than after each call. There is no need for the function to take a callback, because if the caller needs to wait for the result, an await can be added before the call to this function, and errors can be thrown. The new function using await before each of the operations connect(), insertOne(), and find() is shown:
+
+```js
+async function testWithAsync() {
+  console.log('\n--- testWithAsync ---');
+  const client = new MongoClient(url, { useNewUrlParser: true });
+  try {
+    await client.connect();
+    console.log('Connected to MongoDb');
+    const db = client.db();
+    const collection = db.collection('employees');
+
+    const employee = { id: 2, name: 'B. Async', age 16 };
+    const result = await collection.insertOne(employee);
+    console.log('Result of insert:\n', result.insertedId);
+
+    const docs = await collection.find({ _id: result.insertedId })
+      .toArray();
+    console.log('Result of find:\n', docs);
+  } catch (err) {
+    console.log(err);
+  } finnaly {
+    client.close();
+  }
+}
+```
+
+Finally, let’s modify the main part of the program to call testWithAsync() within the callback that
+handles the return value from testWithCallbacks():
+
+<pre>
+...
+testWithCallbacks(function(err) {
+  if (err) {
+    console.log(err);
+  }
+  <b>testWithAsync();</b>
+});
+...
+</pre>
+
+If you clear the collection using remove() as described previously and test these changes, you will see
+this result (the ObjectIDs that you see will be different than the ones shown here):
+
+```js
+Connected to db
+Result of insert:
+ 625f0d4bc53a2954802d23f4
+Result of find:
+ [
+  {
+    _id: 625f0d4bc53a2954802d23f4,
+    id: 1,
+    name: 'A. Callback',
+    age: 23
+  }
+]
+
+--- testWithAsync ---
+Result insert:
+ 625f0d4bc53a2954802d23f5
+Result of find:
+ [ { _id: 625f0d4bc53a2954802d23f5, id: 2, name: 'B. Async', age: 16 } ]
+```
+
+A good way to test whether errors are being caught and displayed is by running the program again. There will be errors because we have a unique index on the field id, so MongoDB will throw a duplicate key violation. If you have dropped the collection after creating the index, you could run the createIndex()
+command to reinstate this index.
+As you can see, the async/await paradigm is much smaller in terms of code, as well as a lot clearer and
+easier to read. In fact, although we caught the error within this function, we didn’t have to do it. We could as well have let the caller handle it. Given the benefits of the async/await paradigm, let’s use this in the Issue Tracker application when interacting with the database.
