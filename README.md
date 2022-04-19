@@ -54,4 +54,146 @@ The connection to the database, db, is similar to the db variable we used in the
 ```js
 ...
 const collection = db.collection('employees');
+...
 ```
+
+With this collection, we can do the same things we did with the mongo shell’s equivalent db.employees in the previous section. The methods are also very similar, except that they are all asynchronous. This means that the methods take in the regular arguments, but also a callback function that’s called when the operation completes. The convention in the callback functions is to pass the error as the first argument and the result of the operation as the second argument. 
+Let’s insert a document and read it back to see how these methods work within the Node.js driver. The insertion can be written using the insertOne method, passing in an employee document and a callback. Within the callback, let’s print the new `_id` that was created. Just as in the mongo shell insertOne command,
+the created ID is returned as part of the result object, in the property called insertedId.
+
+```js
+...
+const employee = { id: 1, name: 'A.Callback', age: 23 };
+collecton.insertOne(employee, function(err, result) {
+ console.log('Result of insert:\n', result.insertedId);
+```
+
+Note that accessing the collection and the insert operation can only be called within the callback of the connection operation, because only then do we know that the connection has succeeded. There also needs to be some amount of error handling, but let’s deal with this a little later. Now, within the callback of the insert operation, let’s read back the inserted document, using the ID of the result. We could use either the ID we supplied (id) or the auto-generated MongoDB ID `_id`. Let’s use `_id` just to make sure that we are able to use the result values.
+
+```js
+...
+collection.find({ _id: result.insertedId })
+ .toArray(function(err, docs) {
+   console.log('Result of find:\n', docs);
+ }
+...
+```
+
+Now that we are done inserting and reading back the document, we can close the connection to the server. If we don’t do this, the Node.js program will not exit, because the connection object is waiting to be used and listening to a socket.
+
+```js
+...
+ client.close();
+...
+```
+
+Let’s put all this together in a function called testWithCallbacks(). We will soon also use a different method of using the Node.js driver using async/await. Also, as is customary, let’s pass a callback function to this function, which we will call from the testWithCallbacks() function once all the operations are
+completed. Then, if there are any errors, these can be passed to the callback function. Let’s first declare this function:
+
+```js
+...
+function testWithCallbacks(callback) {
+	console.log('\n--- testWithCallbacks ---');
+	...
+}
+...
+```
+
+And within each callback as a result of each of the operations, on an error, we need to do the following:
+•	 Close the connection to the server<br />
+•	 Call the callback<br />
+•	 Return from the call, so that no more operations are performed<br />
+
+We also need to do the same when all operations are completed. The pattern of the error handling is like this:
+
+```js
+...
+if (err) {
+	client.close();
+	callback(err);
+	return;
+}
+...
+```
+
+Let’s also introduce a call to the testWithCallbacks() function from the main section, supply it a callback to receive any error, and print it if any
+
+```js
+...
+testWithCallback(function(err) {
+	if (err) {
+		console.log(err);
+}
+...
+```
+
+With all the error handling and callbacks introduced, the final code in the trymongo.js file is shown:
+
+```js
+const { MongoClient } = require('mongodb');
+
+const url = 'mongodb://localhost/issuetracker';
+
+// Atlas URL - replace UUU with user, PPP with password, XXX with hostname
+// const url = 'mongodb+srv://UUU:PPP@cluster0-XXX.mongodb.net/issuetracker?retryWrites=true';
+
+// mLab URL - replace UUU with user, PPP with password, XXX with hostname
+// const url = 'mongodb://UUU:PPP@XXX.mlab.com:33533/issuetracker';
+
+function testWithCallbacks(callback) {
+	console.log('\n--- testWithCallbacks ---');
+	const client = new MongoClient(url, { useNewUrlParser: true });
+	client.connect(function(err, client) {
+		if (err) {
+			callback(err);
+			return;
+		}
+		console.log('Connected to db');
+		
+		const db = client.db();
+		const collection = db.collection('employees');
+		
+		const employee = { id: 1, name: 'A. Callback', age: 23 };
+		collection.insertOne(employee, function(err, result) {
+			if (err) {
+				client.close();
+				callback(err);
+				return;
+			}
+			console.log('Result of insert:\n', result.insertedId);
+			collection.find({ _id: result.insertedId })
+				.toArray(function(err, docs) {
+				if (err) {
+					client.close();
+					callback(err);
+					return;
+				}
+				console.log('Result of find:\n', docs);
+				client.close();
+				callback(err);
+			});
+		});
+	});
+}
+	
+testWithCallbacks(function(err) {
+	if (err) {
+		console.log(err);
+	}
+});
+```
+
+Let’s clean up the collection before we test this. We could open another command shell, run the mongo shell in it, and execute db.employees.remove({}). But the mongo shell has a command line way of executing a simple command using the --eval command line option. Let’s do that instead and pass the database name to connect to; otherwise, the command will be executed on the default database test. For the local installation, the command will look like this:
+
+`$ mongo issuetracker --eval "db.employees.remove({})" `
+
+If you are using a remote server from one of the hosting providers, instead of the database name, use the connection string including the database name as suggested by the hosting provider. For example, the Atlas command may look like this (replace the hostname, user, and password with your own):
+
+` $ mongo "mongodb+srv://cluster0-xxxxx.mongodb.net/issuetracker" --username atlasUser --password atlasPassword --eval "db.employees.remove({})"`
+
+Now, we are ready to test the trial program we just created. It can be executed like this:
+
+`$ node scripts/trymongo.js `
+
+This should result in output like this (you will see a different ObjectID, otherwise the output should be the same):
+
