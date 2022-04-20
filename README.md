@@ -95,19 +95,18 @@ let aboutMessage = "Issue Tracker API v1.0";
   db = client.db();
 }</b>
 
-const server = new ApolloServer({
-  ...
-  <b>(async function() {
-    try{
-      await connectToDb();</b>
-      app.listen(3000, function() {
-        console.log('App started on port 3000');
-      });<b>
-    } catch(err) {
-      console.log('ERROR:', err);
-    }
-  })();</b>
-})
+
+<b>(async function() {
+  try{
+    await connectToDb();</b>
+    app.listen(3000, function() {
+      console.log('App started on port 3000');
+    });<b>
+  } catch(err) {
+    console.log('ERROR:', err);
+  }
+})();</b>
+
 </pre>
 
  > We did not have to do anything special due to the fact that the resolver issueList() is now an async function, which does not immediately return a value. The graphql-tools library handles this automatically. A resolver can return a value immediately or return a Promise (which is what an async function returns immediately). Both are acceptable return values for a resolver.
@@ -125,3 +124,7 @@ type Issue {
 </pre>
 
 if you refresh the browser, you will find that the two initial sets of issues are listed in a table, as before. The UI itself will show no change, but to convince yourself that the data is indeed coming from the database, you could modify the documents in the collection using the mongo shell and the updateMany()method on the collection. If, for example, you update effort to 100 for all the documents and refresh the browser, you should see that the effort is indeed showing 100 for all the rows in the table.
+
+![mongosh-update-effort](./resources/mongosh-update-effort.JPG)
+
+![playground-update-effort](./resources/updated-effort.JPG)

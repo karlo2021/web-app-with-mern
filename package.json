@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/karlo2021/NodeJs.git"
+    "url": "git+https://github.com/karlo2021/web-app-with-mern"
   },
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/karlo2021/NodeJs/issues"
+  "bugs": { 
+    "url": "https://github.com/karlo2021/web-app-with-mern"
   },
-  "homepage": "https://github.com/karlo2021/NodeJs#readme",
+  "homepage": "https://github.com/karlo2021/web-app-with-mern#readme",
   "dependencies": {
     "apollo-server-express": "^2.25.3",
     "express": "^4.17.3",
