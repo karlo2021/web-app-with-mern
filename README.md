@@ -39,8 +39,8 @@ async function findNextSequence(name) {
 ...    
 ```
 
- >  The option for returning the current or new value is called differently in the Node.js driver and in the mongo shell. In the mongo shell, the option is called 
- >  returnNewDocument and the default is false. In the Node. js driver, the option is called returnOriginal and the default is true. In both cases, the default 
+ >  The option for returning the current or new value is called differently in the Node.js driver and in the mongo shell. In the mongo shell, the option is called
+ >  returnNewDocument and the default is false. In the Node. js driver, the option is called returnOriginal and the default is true. In both cases, the default
  >  behavior is to return the original, so the option must be specified to return the new document
 
 
