@@ -87,9 +87,9 @@ async</b> function issueAdd(_, { issue }) {
   <del>issuesDB.push(issue);</del>
   <b>const result = await db.collection('issues').insertOne(issue);</b>
   
-  <del>return issue</del>
-  <b>const savedIssue = await db.collection('issues').findOne(
-    { _id: result.insertedId });
+  <del>return issue;</del>
+  <b>const savedIssue = await db.collection('issues')
+    .findOne({ _id: result.insertedId });
   return savedIssue;</b>
   ...
 </pre>
