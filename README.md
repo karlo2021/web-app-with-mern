@@ -1,16 +1,8 @@
 # Schema Initialization
 
-The mongo shell is not only an interactive shell, but is also a scripting environment. Using this, scripts can be written to perform various tasks such as schema initialization and migration. Because the mongo shell is in fact built on top of a JavaScript engine, the power of JavaScript is available in the scripts, just as in the shell itself.
-One difference between the interactive and the non-interactive mode of working is that the noninteractive shell does not support non-JavaScript shortcuts, such as use $db and show collections
-commands.
-Let’s create a schema initialization script called init.mongo.js within the script directory. Since
-MongoDB does not enforce a schema, there is really no such thing as a schema initialization as you may do
-in relational databases, like creation of tables. The only thing that is really useful is the creation of indexes, which are one-time tasks.
-We will use the same database called issuetracker that we used to try out the mongo shell, to
-store all the collections relevant to the Issue Tracker application.
-Let’s copy the array of issues from server.js and use the same array to initialize the collection using
-insertMany() on a collection called issues. But before that, let’s clear existing issues it by calling a remove() with an empty filter (which will match all documents) on the same collection.
-Complete contents of the initialization script, init.mongo.js is shown:
+The mongo shell is not only an interactive shell, but is also a scripting environment. Using this, scripts can be written to perform various tasks such as schema initialization and migration. Because the mongo shell is in fact built on top of a JavaScript engine, the power of JavaScript is available in the scripts, just as in the shell itself. One difference between the interactive and the non-interactive mode of working is that the noninteractive shell does not support non-JavaScript shortcuts, such as use $db and show collections commands.
+Let’s create a schema initialization script called init.mongo.js within the script directory. Since MongoDB does not enforce a schema, there is really no such thing as a schema initialization as you may do in relational databases, like creation of tables. The only thing that is really useful is the creation of indexes, which are one-time tasks. We will use the same database called issuetracker that we used to try out the mongo shell, to store all the collections relevant to the Issue Tracker application.
+Let’s copy the array of issues from server.js and use the same array to initialize the collection using insertMany() on a collection called issues. But before that, let’s clear existing issues it by calling a remove() with an empty filter (which will match all documents) on the same collection. Complete contents of the initialization script, init.mongo.js is shown:
 
 ```js
 /*
