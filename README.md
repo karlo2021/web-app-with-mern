@@ -40,8 +40,8 @@ async function findNextSequence(name) {
 ```
 
  >  The option for returning the current or new value is called differently in the Node.js driver and in the mongo shell. In the mongo shell, the option is called
-returnNewDocument and the default is false. In the Node. js driver, the option is called returnOriginal and the default is true. In both cases, the default
-behavior is to return the original, so the option must be specified to return the new document
+ returnNewDocument and the default is false. In the Node. js driver, the option is called returnOriginal and the default is true. In both cases, the default
+ behavior is to return the original, so the option must be specified to return the new document
 
 
 Now, we can use this function to generate a new ID field and set it in the supplied issue object in the resolver issueAdd(). We can then write to the collection called issues using insertOne(), and then read back the newly created issue using findOne().
