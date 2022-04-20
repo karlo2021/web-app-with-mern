@@ -1,53 +1,127 @@
-# Schema Initialization
+# Reading from MongoDB
 
-The mongo shell is not only an interactive shell, but is also a scripting environment. Using this, scripts can be written to perform various tasks such as schema initialization and migration. Because the mongo shell is in fact built on top of a JavaScript engine, the power of JavaScript is available in the scripts, just as in the shell itself. One difference between the interactive and the non-interactive mode of working is that the noninteractive shell does not support non-JavaScript shortcuts, such as use $db and show collections commands.
+In the previous section, you saw how to use the Node.js driver to perform basic CRUD tasks. Let’s now change the List API to read from the MongoDB database rather than the in-memory array of issues in the server. Since we’ve initialized the database with the same initial set of issues, while testing, you should see the same set of issues in the UI.
 
-Let’s create a schema initialization script called init.mongo.js within the script directory. Since MongoDB does not enforce a schema, there is really no such thing as a schema initialization as you may do in relational databases, like creation of tables. The only thing that is really useful is the creation of indexes, which are one-time tasks. We will use the same database called issuetracker that we used to try out the mongo shell, to store all the collections relevant to the Issue Tracker application.
-
-Let’s copy the array of issues from server.js and use the same array to initialize the collection using insertMany() on a collection called issues. But before that, let’s clear existing issues it by calling a remove() with an empty filter (which will match all documents) on the same collection. Complete contents of the initialization script, init.mongo.js is shown:
+In the trial that we did for the driver, we used the connection to the database in a sequence of operations and closed it. In the application, instead, we will maintain the connection so that we can reuse it for many operations, which will be triggered from within API calls. So, we’ll need to store the connection to the database in a global variable. Let’s do that in addition to the import statement and other global variable declarations and call the global database connection variable db:
 
 ```js
-/*
- * Run using the mongo shell. For remote databases, ensure that the
- * connection string is supplied in the command line. For example:
- * localhost:
- * mongo issuetracker scripts/init.mongo.js
- * Atlas:
- * mongo mongodb+srv://user:pwd@xxx.mongodb.net/issuetracker scripts/init.mongo.js
- * MLab:
- * mongo mongodb://user:pwd@xxx.mlab.com:33533/issuetracker scripts/init.mongo.js
- */
+...
+const url = 'mongodb://localhost/issuetracker';
 
-db.issues.remove({});
+// Atlas URL - replace UUU with user, PPP with password, XXX with hostname
+// const url = 'mongodb+srv://UUU:PPP@cluster0-XXX.mongodb.net/issuetracker?retryWrites=true';
 
-const issuesDB = [
-  {
-    id: 1, status: 'New', owner: 'Ravan', effort: 5,
-    created: new Date('2019-01-15'), due: undefined,
-    title: 'Error in console when clicking Add',
-  },
-  {
-    id: 2, status: 'Assigned', owner: 'Eddie', effort: 14,
-    created: new Date('2019-01-16'), due: new Date('2019-02-01'),
-    title: 'Missing bottom border on panel',
-  },
-];
+// mLab URL - replace UUU with user, PPP with password, XXX with hostname
+// const url = 'mongodb://UUU:PPP@XXX.mlab.com:33533/issuetracker';
 
-db.issues.insertMany(issuesDB);
-const count = db.issues.count();
-print('Inserted', count, 'issues');
-
-db.issues.createIndex({ id: 1 }, { unique: true });
-db.issues.createIndex({ status: 1 });
-db.issues.createIndex({ owner: 1 });
-db.issues.createIndex({ created: 1 });
+let db;
+...
 ```
 
-You should be able to run this script using the mongo shell, with the name of the file as an argument in
-the command line, if you are using the local installation of MongoDB like this:
+Next, let’s write a function to connect to the database, which initializes this global variable. This is a minor variation of what we did in trymongo.js. Let’s not catch any errors in this function, instead, let the caller deal with them.
 
-`$ mongo issuetracker scripts/init.mongo.js `
+```js
+...
+async function connectToDb() {
+  const client = new MongoClient(url, { useNewUrlParser: true });
+  await client.connect();
+  console.log('Connected to MongoDB at', url);
+  db = client.db();
+}
+...
+```
 
-For the other methods of using MongoDB, there are instructions as comments on the top of the script. In essence, the entire connection string has to be specified in the command line, including the username and password that you use to connect to the hosted service. Following the connection string, you can type the name of the script, scripts/init.mongo.js.
+Now, we have to change the setup of the server to first connect to the database and then start the Express application. Since connectToDb() is an async function, we can use await to wait for it to finish, then call app.listen(). But since await cannot be used in the main section of the program, we have to enclose it within an async function and execute that function immediately.
 
-You can run this any time you wish to reset the database to its pristine state. You should see an output that indicates that two issues were inserted, among other things such as the MongoDB version and the shell version. Note that creating an index when one already exists has no effect, so it is safe to create the index multiple times.
+```js
+...
+(async function() {
+  await connectToDb();
+  app-listen(3000, function() {
+    console.log('App started on port 3000');
+  });
+})();
+...
+```
+
+But we also have to deal with errors. So, let’s enclose the contents of this anonymous function within a try block and print any errors on the console in the catch block:
+
+```js
+...
+(async function() {
+  try {
+    ...
+  } catch (err) {
+    console.log('Error:', err);
+  }
+})();
+...
+```
+
+Now that we have a connection to the database set up in the global variable called db, we can use it in the List API resolver issueList() to retrieve a list of issues by calling the find() method on the issues collection. We need to return an array of issues from this function, so let’s just use toArray() function on the results of find() like this:
+
+```js
+...
+  const issues = await db.collection('issues').find({}).toArray();
+...
+```
+
+The changes to **server.js** are shown in
+
+<pre>
+...
+const { Kind } = require('graphql/language');
+<b>const { MongoClient } = require('mongodb');
+
+const url = 'mongodb://localhost/issuetracker';</b>
+// Atlas URL - replace UUU with user, PPP with password, XXX with hostname
+// const url = 'mongodb+srv://UUU:PPP@cluster0-XXX.mongodb.net/issuetracker?retryWrites=true';
+// mLab URL - replace UUU with user, PPP with password, XXX with hostname
+// const url = 'mongodb://UUU:PPP@XXX.mlab.com:33533/issuetracker';
+<b>let db;</b>
+
+let aboutMessage = "Issue Tracker API v1.0";
+...
+<b>async</b> function issueList() {
+  <del>return issuesDB;</del>
+  <b>const issues = db.collection('issues').find({}).toArray();
+  return issues;</b>
+}
+...
+<b>async function connectToDb() {
+  const client = new MongoClient(url, { useNewUrlParser: true });
+  await client.connect();
+  console.log('Connected to MongoDB at', url);
+  db = client.db();
+}</b>
+
+const server = new ApolloServer({
+  ...
+  <b>(async function() {
+    try{
+      await connectToDb();</b>
+      app.listen(3000, function() {
+        console.log('App started on port 3000');
+      });<b>
+    } catch(err) {
+      console.log('ERROR:', err);
+    }
+  })();</b>
+})
+</pre>
+
+ > We did not have to do anything special due to the fact that the resolver issueList() is now an async function, which does not immediately return a value. The graphql-tools library handles this automatically. A resolver can return a value immediately or return a Promise (which is what an async function returns immediately). Both are acceptable return values for a resolver.
+
+Since the issues from the database now contain an _id in addition to the id field, let’s include that in the GraphQL schema of the type Issue. Otherwise, clients who call the API will not be able to access this field. Let’s use ID as its GraphQL data type and make it mandatory. This change is shown:
+
+<pre>
+...
+type Issue {
+  <b>_id: ID!</b>
+  id: Int!
+  ...
+}
+...
+</pre>
+
+if you refresh the browser, you will find that the two initial sets of issues are listed in a table, as before. The UI itself will show no change, but to convince yourself that the data is indeed coming from the database, you could modify the documents in the collection using the mongo shell and the updateMany()method on the collection. If, for example, you update effort to 100 for all the documents and refresh the browser, you should see that the effort is indeed showing 100 for all the rows in the table.
