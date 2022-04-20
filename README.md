@@ -47,6 +47,51 @@ async function findNextSequence(name) {
 Now, we can use this function to generate a new ID field and set it in the supplied issue object in the resolver issueAdd(). We can then write to the collection called issues using insertOne(), and then read back the newly created issue using findOne().
 
 
+```js
+...
+  issue.id = await getNextSequence('issues');
+  
+  const result = await db.collection('issues').insertOne(issue);
+  const savedIssue = await db.collection('issues')
+    .findOne({ _id: result.insertedId });
+  return savedIssue;
+...
+```
 
+Finally, we can get rid of the in-memory array of issues in the server. Including this change, the complete set of changes in **server.js** is represented: 
 
+<pre>
+...
+<del>const issueDB = [
+  {
+    id: 1
+    ...
+];</del>
+...
+<b>async function getNextSequence(name) {
+  const result = await db.colleciton('counters').findOne(
+    { _id: name },
+    { $inc { current: 1 } },
+    { returnOriginal: false }
+   );
+   return result.current.value;
+}
 
+async</b> function issueAdd(_, { issue }) {
+  const errors = [];
+  ...
+  const created = new Date();
+  <del>issue.id = issuesDB.length + 1;</del>
+  <b>issue.id = await getNextSequence('issues');</b>
+  
+  <del>issuesDB.push(issue);</del>
+  <b>const result = await db.collection('issues').insertOne(issue);</b>
+  
+  <del>return issue</del>
+  <b>const savedIssue = await db.collection('issues').findOne(
+    { _id: result.insertedId });
+  return savedIssue;</b>
+  ...
+</pre>
+
+Testing this set of changes will show that new issues can be added, and even on a restart of the Node.js server, or the database server, the newly added issues are still there. As a cross-check, you could use the mongo shell to look at the contents of the collection after every change from the UI.
