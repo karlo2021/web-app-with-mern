@@ -52,7 +52,7 @@ directories public and src under this.
 
 But just moving the directories is not enough; we need a package.json file in each of these directories ui and api, both for saving npm dependencies as well as for creating convenient scripts for running the server. With the new package.json files and after installing all the dependencies, the new directory structure will look like:
 
-![new-directory-structure](./resources/new-directory-structure.JPG)
+<img src='./resources/new-directory-structure.JPG' height="333" width="189">
 
 Let’s now create two new **package.json** files in the two new directories. You could also copy this file
 from the root project directory for convenience and make changes. In the file corresponding to the API, let’s use the word API in the name (for example, pro-mern-stack2-api) and the description (for example, "Pro MERN Stack (2nd Edition) API"). As for the scripts, we’ll have just one script to start the server. Since the location of the files has changed from server to the current directory, we can remove the -w option to nodemon in this script.
@@ -109,7 +109,7 @@ prefix from the path of schema.graphql being loaded.
 const server = new ApolloServer({
   typeDefs: fs.readFileSync('<del>./server/</del>schema.graphql, 'utf-8'),
 ...
-<pre>
+</pre>
 
 We can also remove loading of the static middleware and call the new server the API server rather than
 the App server in the console message. The full set of changes for **api/server.js** are shown 
