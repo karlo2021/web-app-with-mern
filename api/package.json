@@ -1,0 +1,27 @@
+{
+    "name": "pro-mern-stack-2-api",
+    "version": "1.0.0",
+    "description": "Pro MERN Stack (2nd Edition) API",
+    "main": "index.js",
+    "scripts": {
+        "start": "nodemon -e js,graphql server.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/karlo2021/web-app-with-mern"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/karlo2021/web-app-with-mern"
+    },
+    "homepage": "https://github.com/karlo2021/web-app-with-mern#readme",
+    "dependencies": {
+        "apollo-server-express": "^2.25.3",
+        "express": "^4.17.3",
+        "graphql": "^0.13.2",
+        "mongodb": "^3.7.3",
+        "nodemon": "^2.0.15"
+    }
+}
