@@ -115,25 +115,25 @@ Using the shell, display a list of methods available on the cursor object.
 
 As per the mongo shell documentation under "Access the mongo shell Help", you can find that there is a method called help() on many objects, including the cursor object. The way to get help on this is using db.collection.find().help().<br />
 But since this is also a JavaScript shell like Node.js, pressing Tab will autocomplete and a double-Tab will show a list of possible completions. Thus, if you assign a cursor to a variable and press Tab twice after typing the variable name and a dot after that, the shell will list the possible completions, and that is a list of methods available on the cursor.
-
+<hr>
 Write a simple statement to retrieve all employees who have middle names.
 
 This can be done using the $exists operator like this:
 `> db.employees.find({ "name.middle": { $exists: true } })`
-
+<hr>
 Say an employee’s middle name was set mistakenly, and you need to remove it. Write a statement to do this
 
 The $unset operator in an update can be used to unset a field (which is actually different from setting it to null). Here is an example:<br />
 `> db.employees.update(({_id: ObjectId("57b1caea3475bb1784747ccb")}, {"name.middle": {$unset: null}})`
-
+<hr>
 During index creation, what did the 1 indicate? What other valid values are allowed?
 
 The 1 indicates an ascending sort order for traversing the index. -1 is used to indicate a descending sort order.
-
+<hr>
 We used toArray() to convert the list of issues into an array. What if the list is too big, say, a million documents? How would you deal with this?
 
 One option is to use limit() on the result to limit the return value to a maximum number of records. For example, find().limit(100) returns the first 100 documents. If you were to paginate the output in the UI, you could also use the skip() method to specify where to start the list. If, on the other hand, you think the client can handle large lists but you don’t want to expend that much memory in the server, you could deal with one document at a time using hasNext() and next() and stream the results back to the client.
-
+<hr>
 Could we have just added the `_id` to the passed-in object and returned that instead of doing a find() for the inserted object?
 
 Adding the `_id` and returning the object passed in would have worked, so long as you know for a fact that the write was a success and the object was written to the database as is. In most cases, this would be true, but it’s good practice to get the results from the database, as that is the ultimate truth.
