@@ -36,19 +36,19 @@ const GraphQLDate = new GraphQLScalarType({
 });
 
 const resolvers = {
-    Query: {
-        about: () => aboutMessage,
-        issueList,
-    },
-    Mutation: {
-        setAboutMessage,
-        issueAdd,
-    },
-    GraphQLDate,
+  Query: {
+    about: () => aboutMessage,
+    issueList,
+  },
+  Mutation: {
+    setAboutMessage,
+    issueAdd,
+  },
+  GraphQLDate,
 };
 
-function setAboutMessage(_, {message}) {
-    return aboutMessage = message;
+function setAboutMessage(_, { message }) {
+  return aboutMessage = message;
 }
 
 async function issueList() {
@@ -59,10 +59,23 @@ async function issueList() {
 async function getNextSequence(name) {
   const result = await db.collection('counters').findOneAndUpdate(
     { _id: name },
-    { $inc: { current: 1 }},
-    { returnOriginal: false }
+    { $inc: { current: 1 } },
+    { returnOriginal: false },
   );
   return result.value.current;
+}
+
+function issueValidate(issue) {
+  const errors = [];
+  if (issue.title.length < 3) {
+    errors.push('Field "title" must be at least 3 characters long.');
+  }
+  if (issue.status === 'Assigned' && !issue.owner) {
+    errors.push('Field "owner" is required when status is "Assigned"');
+  }
+  if (errors.length > 0) {
+    throw new UserInputError('Invalid input(s)', { errors });
+  }
 }
 
 async function issueAdd(_, { issue }) {
@@ -73,23 +86,7 @@ async function issueAdd(_, { issue }) {
   const result = await db.collection('issues').insertOne(issue);
   const savedIssue = await db.collection('issues')
     .findOne({ _id: result.insertedId });
-  
   return savedIssue;
-}
-
-function issueValidate(issue) {
-  const errors = [];
-
-  if (issue.title.length < 3) {
-    errors.push('Field "Title" must be at least 3 characters long')
-  }
-  if (issue.status == 'Assigned' && !issue.owner) {
-    errors.push('Field "owner" is required when status is "Assigned"');
-  }
-  if (errors.length > 0)
-  {
-    throw new UserInputError('Invalid input(s)', { errors });
-  }
 }
 
 async function connectToDb() {
@@ -100,28 +97,25 @@ async function connectToDb() {
 }
 
 const server = new ApolloServer({
-    typeDefs: fs.readFileSync('./server/schema.graphql', 'utf-8'),
-    resolvers,
-    formatError: error => {
-      console.log(error);
-      return error;
-    },
+  typeDefs: fs.readFileSync('schema.graphql', 'utf-8'),
+  resolvers,
+  formatError: error => {
+    console.log(error);
+    return error;
+  },
 });
 
 const app = express();
 
-app.use(express.static('public'));
-
 server.applyMiddleware({ app, path: '/graphql' });
 
-(async function() {
+(async function () {
   try {
     await connectToDb();
-    app.listen(3000, function(){
-      console.log('Listening on port 3000');
+    app.listen(3000, function () {
+      console.log('API server started on port 3000');
     });
   } catch (err) {
     console.log('ERROR:', err);
   }
-  
 })();

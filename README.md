@@ -126,7 +126,7 @@ const app = express();
 server.applyMiddleware({ app, path: '/graphql' });
 ...
   app.listen(3000, function() {
-    console.log('<del>App</del>API server started on port 3000');
+    console.log('<del>App</del><b>API server</b> started on port 3000');
   });
   ...
 </pre>
@@ -136,3 +136,104 @@ APIs using the GraphQL Playground, you should find that the APIs are working as 
 
 The UI server changes are a bit more involved. We’ll need a new package.json that has both server and
 transformation npm packages, such as Babel. Let’s create a new package.json in the UI directory. You could do this either by copying from the project root directory or by running npm init. Then, in the dependencies section, let’s add Express and nodemon:
+
+```json
+...
+  "dependencies": {
+    "express": "^4.17.3"^,
+    "nodemon": "^2.0.15"
+  }
+...
+```
+
+As for devDependencies, let’s keep the original set from the package.json in the root directory.
+
+```json
+...
+  "devDependencies": {
+    "@babel/cli": "^7.17.6",
+    "@babel/core": "^7.17.8",
+    "@babel/preset-env": "^7.16.11",
+    "@babel/preset-react": "^7.16.7"
+  }
+...
+```
+
+Let’s install all the dependencies that are needed for the UI server
+
+```
+$ cd ui
+$ npm install
+```
+
+Now, let’s create an Express server to serve the static files, called uiserver.js, in the directory ui.
+This is very similar to the server we created for Hello World. All we need is the Express app with the static middleware. The contents of the file are shown in _Listing 7-3_:
+
+```js
+const express = require('express');
+
+const app = express();
+
+app.use(express.static('public'));
+
+app.listen(8000, function() {
+  console.log('UI started on port 8000');
+});
+```
+
+To run this server, let’s create a script for starting it in package.json. It is the usual nodemon command that you have seen in other server start scripts. This time, we’ll only watch for the uiserver.js file since we have other files not related to the server per se.
+
+```json
+...
+  "scripts": {
+    "start": "nodemon -w uiserver.js uiserver.js",
+  },
+...
+```
+
+Further, to generate the transformed JavaScript file, let’s add the compile and watch scripts, as in the
+original package.json file. The complete contents of this file, including the compile and watch scripts, are shown:
+
+```json
+{
+ "name": "pro-mern-stack-2-ui",
+ "version": "1.0.0",
+ "description": "Pro MERN Stack (2nd Edition) - UI",
+ "main": "index.js",
+ "scripts": {
+ "start": "nodemon -w uiserver.js uiserver.js",
+ "compile": "babel src --out-dir public",
+ "watch": "babel src --out-dir public --watch --verbose"
+ },
+ "repository": {
+ "type": "git",
+ "url": "git+https://github.com/vasansr/pro-mern-stack-2.git"
+ },
+ "author": "vasan.promern@gmail.com",
+ "license": "ISC",
+ "homepage": "https://github.com/vasansr/pro-mern-stack-2",
+ "dependencies": {
+ "express": "^4.16.3",
+ "nodemon": "^1.18.4"
+ },
+ "devDependencies": {
+ "@babel/cli": "^7.0.0",
+ "@babel/core": "^7.0.0",
+ "@babel/preset-env": "^7.0.0",
+ "@babel/preset-react": "^7.0.0"
+ }
+}
+```
+
+Now, you can test the application by running both the UI and API servers using npm start within each
+corresponding directory. As for the transformation, you could, within the ui directory, either run npm run compile or npm run watch. But the API calls will fail because the endpoint /graphql has no handlers in the UI server. So, instead of making API calls to the UI server, we need to change the UI to call the API server. This can be done in the App.jsx file, as shown
+
+<pre>
+async function graphQLFetch(query, variables = {}) {
+  try {
+    const response = await fetch('<b>http:localhost:3000</b>/graphql', {
+      method: 'POST',
+    ...
+</pre>
+
+![ui-server](./resources/ui-running.JPG)
