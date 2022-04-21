@@ -137,10 +137,10 @@ APIs using the GraphQL Playground, you should find that the APIs are working as 
 The UI server changes are a bit more involved. We’ll need a new package.json that has both server and
 transformation npm packages, such as Babel. Let’s create a new package.json in the UI directory. You could do this either by copying from the project root directory or by running npm init. Then, in the dependencies section, let’s add Express and nodemon:
 
-```json
+```js
 ...
   "dependencies": {
-    "express": "^4.17.3"^,
+    "express": "^4.17.3",
     "nodemon": "^2.0.15"
   }
 ...
@@ -148,7 +148,7 @@ transformation npm packages, such as Babel. Let’s create a new package.json in
 
 As for devDependencies, let’s keep the original set from the package.json in the root directory.
 
-```json
+```js
 ...
   "devDependencies": {
     "@babel/cli": "^7.17.6",
