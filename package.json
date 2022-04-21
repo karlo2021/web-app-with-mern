@@ -1,5 +1,5 @@
 {
-  "name": "nodejs",
+  "name": "pro-mern-stack-2-api",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -15,7 +15,7 @@
   },
   "author": "",
   "license": "ISC",
-  "bugs": { 
+  "bugs": {
     "url": "https://github.com/karlo2021/web-app-with-mern"
   },
   "homepage": "https://github.com/karlo2021/web-app-with-mern#readme",
