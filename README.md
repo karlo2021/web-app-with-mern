@@ -66,7 +66,7 @@ from the root project directory for convenience and make changes. In the file co
 As for the dependencies, we’ll not have any devDependencies, but all the regular dependencies that
 were needed for running the server. The complete package.json file is shown:
 
-```js
+```json
 {
  "name": "pro-mern-stack-2-api",
  "version": "1.0.0",
@@ -113,3 +113,26 @@ const server = new ApolloServer({
 
 We can also remove loading of the static middleware and call the new server the API server rather than
 the App server in the console message. The full set of changes for **api/server.js** are shown 
+
+<pre>
+...
+const server = new ApolloServer({
+  typeDefs: fs.readFileSync('<del>./server/</del>schema.graphql', 'utf-8'),
+...
+const app = express();
+
+<del>app.use(express.static('public'));</del>
+
+server.applyMiddleware({ app, path: '/graphql' });
+...
+  app.listen(3000, function() {
+    console.log('<del>App</del>API server started on port 3000');
+  });
+  ...
+</pre>
+
+At this point in time, you should be able to run the API server using npm start. Further, if you test the
+APIs using the GraphQL Playground, you should find that the APIs are working as before.
+
+The UI server changes are a bit more involved. We’ll need a new package.json that has both server and
+transformation npm packages, such as Babel. Let’s create a new package.json in the UI directory. You could do this either by copying from the project root directory or by running npm init. Then, in the dependencies section, let’s add Express and nodemon:
