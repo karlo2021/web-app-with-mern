@@ -169,6 +169,8 @@ $ npm install
 Now, let’s create an Express server to serve the static files, called uiserver.js, in the directory ui.
 This is very similar to the server we created for Hello World. All we need is the Express app with the static middleware. The contents of the file are shown in _Listing 7-3_:
 
+Listing 7-3. ui/uiserver.js: New Server for Static Content
+
 ```js
 const express = require('express');
 
