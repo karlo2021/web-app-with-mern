@@ -21,6 +21,7 @@ db.counters.insert({ id: 'issues', current: count });</b>
 Let’s run the schema initialization script again to make this change take effect:
 
 `$ mongosh issuetracker scripts/init.mongo.js `
+` mongosh "mongodb+srv://cluster0.wpj19.mongodb.net/issuetracker" --username karlo --password mernstack2021 scripts/init.mongo.js `
 
 Now, a call to findOneAndUpdate() that increments the current field is guaranteed to return a unique value that is next in the sequence. Let’s create a function in server.js that does this, but in a generic manner. We’ll let it take the ID of the counter and return the next sequence. In this function, all we have to do is call findOneAndUpdate(). It identifies the counter to use using the ID supplied, increments the field called current, and returns the new value. By default, the result of the findOneAndUpdate() method returns the original document. To make it return the new, modified document instead, the option returnOriginal has to be set to false.
 
@@ -28,7 +29,7 @@ The arguments to the method findOneAndUpdate() are (a) the filter or match, for 
 
 ```js
 ...
-async function findNextSequence(name) {
+async function getNextSequence(name) {
   const result = await db.collection('counters').findOneAndUpdateOne(
     { _id: name },
     { $inc: { current: 1 } },
@@ -95,3 +96,5 @@ async</b> function issueAdd(_, { issue }) {
 </pre>
 
 Testing this set of changes will show that new issues can be added, and even on a restart of the Node.js server, or the database server, the newly added issues are still there. As a cross-check, you could use the mongo shell to look at the contents of the collection after every change from the UI.
+
+![add-button-teste](./resources/add-button-working.JPG)

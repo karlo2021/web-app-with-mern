@@ -6,7 +6,7 @@
  * Atlas:
  * mongo mongodb+srv://user:pwd@xxx.mongodb.net/issuetracker scripts/init.mongo.js
  * mongosh "mongodb+srv://cluster0.wpj19.mongodb.net/issuetracker" --username karlo
- *  --password mernstack2021 scripts/init.mongo.js
+ --password mernstack2021 scripts/init.mongo.js
  * MLab:
  * mongo mongodb://user:pwd@xxx.mlab.com:33533/issuetracker scripts/init.mongo.js
  */
@@ -29,6 +29,9 @@ const issuesDB = [
 db.issues.insertMany(issuesDB);
 const count = db.issues.count();
 print('Inserted', count, 'issues');
+
+db.counters.remove({ _id: 'issues' });
+db.counters.insert({ _id: 'issues', current: count })
 
 db.issues.createIndex({ id: 1 }, { unique: true });
 db.issues.createIndex({ status: 1 });
