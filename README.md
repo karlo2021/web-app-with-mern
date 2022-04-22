@@ -1,241 +1,122 @@
-# Architecture and ESLint
+# Multiple Environments
 
-In this chapter and the next, we’ll take a break from adding features. Instead, we’ll get a bit more organized in preparation for when the application grows larger and larger. 
-In this chapter, we’ll look again at the architecture and make it more flexible so that it can cater to larger applications with lots of traffic. We’ll use a package called dotenv to help us run the same code on different environments using different configurations for each environment, such as development and production. 
-Finally, we’ll add checks to verify that the code we write follows standards and good practices and catches possible bugs earlier in the testing cycle. We’ll use ESLint for this purpose.
+We postponed removing hard-coded things such as the port numbers and MongoDB URL. Now that the
+directory structure has been finalized, it’s perhaps a good time to remove all hard-coding and keep these as variables that can be changed more easily.
 
-## UI Server
+Typically, there would be three deployment environments: development, staging, and production. The
+server ports and MongoDB URL for each of these would be quite different. For example, the ports of both the API server and the UI server would be 80. We used two different ports because both servers were run on the same host, and two processes cannot listen on the same port. Also, we used ports like 8000 because using port 80 requires administrative privileges (superuser rights).
 
-Until now, we did not pay too much attention to the architecture of the application and the one and only
-server dealt with two functions. The Express server not only serves static content, but also serves API calls. The architecture is depicted:
+Rather than predetermine the ports and the MongoDB URL based on possible deployment targets such
+as development, staging, and production, let’s keep the variables flexible so that they can be set to anything at runtime. A typical way of supplying these is via environment variables, especially for remote targets and production servers. But during development, it’s nice to be able to have these in some configuration file so that the developers don’t need to remember to set these up every time.
 
-![signle-server-architecture](./resources/single-server-architecture.JPG)
+Let’s use a package called dotenv to help us achieve this. This package can convert variables stored
+in a file into environment variables. Thus, in the code, we only deal with environment variables, but the
+environment variables can be supplied via real environment variables or configuration files.
 
-All requests land on the same physical server, and within that is the one and only Express application.
-Then, the requests are routed into two different middleware depending on the request. Any request-matching files in the public directory are matched by the middleware called static. This middleware uses the disk to read files and serve the file’s contents. Other requests that match the /graphql path are dealt with by the Apollo Server’s middleware. This middleware, using resolvers, gets the data from the MongoDB database.<br />
-This works great for small applications, but one or more of the following starts happening as the
-application grows:
-
-•	 The API has other consumers, not just the browser-based UI. For example, the API may be exposed to third parties or mobile applications.
-
-•	 The two parts have different scaling requirements. Typically, as more consumers of the API appear, you may need multiple servers for the API and a load-balancer. Whereas, since most static content can and will be cached in the browsers, having many servers for static assets may be overkill.
-
-Further, the fact that both functions are being done on the same server, both inside the same Node.js and Express process, makes it harder to diagnose and debug performance issues. A better option is to separate the two functions into two servers: one that serves static content, and another that hosts just the API.
-
-Figure 7-2 depicts a new-generation architecture with the UI and the API server separated. It also shows
-where server-side rendering will fit in eventually, when we do implement it.
-
-![seperate-ui-server-architecture](./resources/seperate-ui-server-architectures.JPG)
-
-_Figure 7-2 Seperate UI server architectures_
-
-In the diagram in Figure 7-2, you can see that there are two servers: the UI server and the API server. These can be physically different computers, but for development purposes, we’ll run these on the same computer but on different ports. These will be run using two different Node.js processes, each with its own instance of Express.
-
-The API server will now be responsible for handling only the API requests, and therefore, it will respond
-only to URLs matching /graphql in the path. Thus, the Apollo server middleware and its requests to the
-MongoDB database will be the only middleware in the API server.
-
-The UI server part will now contain only the static middleware. In the future, when we introduce server
-rendering, this server will be responsible for generating HTML pages by calling the API server’s APIs to fetch the necessary data. For the moment, we’ll be using the UI server only for serving all static content, which consists of index.html and the JavaScript bundle that contains all the React code.
-The browser will be responsible for using the appropriate server based on the type of request: all API
-calls will be directed to the API server, whereas the static files will be referred to the UI server.
-The first thing we’ll do to achieve this is create a new directory structure that cleanly separates the UI and the API code.
-
- >  Ideally, the UI and API code would belong in two different repositories, because there is nothing that is shared among them. But for the convenience of reading this book we will keep code together but in different directories at the top-most level.
-
-Let’s rename the server directory api rather than create a new one.
-
-Since all the scripts that we have are meant only for the API server, let’s move the scripts directory under the new directory api as well.
-
-For the UI code, let’s create a new directory called ui under the project root and move the UI-related
-directories public and src under this.
-
-But just moving the directories is not enough; we need a package.json file in each of these directories ui and api, both for saving npm dependencies as well as for creating convenient scripts for running the server. With the new package.json files and after installing all the dependencies, the new directory structure will look like:
-
-<img src='./resources/new-directory-structure.JPG' height="333" width="189">
-
-Let’s now create two new **package.json** files in the two new directories. You could also copy this file
-from the root project directory for convenience and make changes. In the file corresponding to the API, let’s use the word API in the name (for example, pro-mern-stack2-api) and the description (for example, "Pro MERN Stack (2nd Edition) API"). As for the scripts, we’ll have just one script to start the server. Since the location of the files has changed from server to the current directory, we can remove the -w option to nodemon in this script.
+The dotenv package looks for a file called .env, which can contain variables defined like in a shell. For
+example, we could have the following line in this file:
 
 ```js
 ...
-  "start": "nodemon -e js,graphql server.js",
+DB_URL=mongodb://localhost/issuetracker
 ...
 ```
 
-As for the dependencies, we’ll not have any devDependencies, but all the regular dependencies that
-were needed for running the server. The complete package.json file is shown:
-
-```json
-{
- "name": "pro-mern-stack-2-api",
- "version": "1.0.0",
- "description": "Pro MERN Stack (2nd Edition) API",
- "main": "index.js",
- "scripts": {
-  "start": "nodemon -e js,graphql server.js",
-  "test": "echo \"Error: no test specified\" && exit 1"
-  },
- "repository": {
-  "type": "git",
-  "url": "git+https://github.com/vasansr/pro-mern-stack-2.git"
-  },
-  "author": "vasan.promern@gmail.com",
-  "license": "ISC",
-  "homepage": "https://github.com/vasansr/pro-mern-stack-2",
-  "dependencies": {
-  "apollo-server-express": "^2.3.1",
-  "express": "^4.16.4",
-  "graphql": "^0.13.2",
-  "mongodb": "^3.1.10",
-  "nodemon": "^1.18.9"
- }
-}
-```
-
-Let’s now install all the npm dependencies based on the new package.json file in the api directory:
+In the code, all we’d have to do is look for the environment variable DB_URL using process.env.DB_URL
+and use the value from it. This value can be overridden by an actual environment variable defined before
+starting the program, so it is not necessary to have this file. In fact, most production deployments would take the value only from the environment variable. Let’s now install the package, first in the API server:
 
 ```
- $ cd ./api
- $ npm install
+$ cd api
+$ npm install dotenv@6
 ```
 
-Since we’ll be running the server from within this new api directory, we will need to load 
-schema.graphql from the current directory. So let’s change code in server.js to remove the /server/
-prefix from the path of schema.graphql being loaded.
+To use this package, all we need to do is to require it and immediately call config() on it.
+
+```js
+...
+require('dotenv').config();
+...
+```
+Now, we can use any environment variable using process.env properties. Let’s first do that in server.js,
+for the MongoDB URL. We already have a variable url, which we can set to DB_URL from process.env and
+default it to the original localhost value if it is undefined:
 
 <pre>
 ...
-const server = new ApolloServer({
-  typeDefs: fs.readFileSync('<del>./server/</del>schema.graphql, 'utf-8'),
+const url = <b>process.env.DB_URL || </b>'mongodb://localhost/issuetracker';
 ...
 </pre>
 
-We can also remove loading of the static middleware and call the new server the API server rather than
-the App server in the console message. The full set of changes for **api/server.js** are shown 
+Similarly, for the server port, let’s use an environment variable called API_SERVER_PORT and use a
+variable called port within server.js like this:
+
+```js
+...
+const port = process.env.API_SERVER_PORT || 3000;
+...
+```
+
+Now we can use the variable port to start the server.
 
 <pre>
 ...
-const server = new ApolloServer({
-  typeDefs: fs.readFileSync('<del>./server/</del>schema.graphql', 'utf-8'),
-...
-const app = express();
-
-<del>app.use(express.static('public'));</del>
-
-server.applyMiddleware({ app, path: '/graphql' });
-...
-  app.listen(3000, function() {
-    console.log('<del>App</del><b>API server</b> started on port 3000');
-  });
+  app.listen(<del>3000</del><b>port</b>, function() {
+    <del>console.log('API server started on port 3000');</del>
+    <b>console.log(`API server started on port ${port}`);</b>
   ...
 </pre>
 
-At this point in time, you should be able to run the API server using npm start. Further, if you test the
-APIs using the GraphQL Playground, you should find that the APIs are working as before.
-
-The UI server changes are a bit more involved. We’ll need a new package.json that has both server and
-transformation npm packages, such as Babel. Let’s create a new package.json in the UI directory. You could do this either by copying from the project root directory or by running npm init. Then, in the dependencies section, let’s add Express and nodemon:
-
-```js
-...
-  "dependencies": {
-    "express": "^4.17.3",
-    "nodemon": "^2.0.15"
-  }
-...
-```
-
-As for devDependencies, let’s keep the original set from the package.json in the root directory.
-
-```js
-...
-  "devDependencies": {
-    "@babel/cli": "^7.17.6",
-    "@babel/core": "^7.17.8",
-    "@babel/preset-env": "^7.16.11",
-    "@babel/preset-react": "^7.16.7"
-  }
-...
-```
-
-Let’s install all the dependencies that are needed for the UI server
-
-```
-$ cd ui
-$ npm install
-```
-
-Now, let’s create an Express server to serve the static files, called uiserver.js, in the directory ui.
-This is very similar to the server we created for Hello World. All we need is the Express app with the static middleware. The contents of the file are shown in _Listing 7-3_:
-
-Listing 7-3. ui/uiserver.js: New Server for Static Content
-
-```js
-const express = require('express');
-
-const app = express();
-
-app.use(express.static('public'));
-
-app.listen(8000, function() {
-  console.log('UI started on port 8000');
-});
-```
-
-To run this server, let’s create a script for starting it in package.json. It is the usual nodemon command that you have seen in other server start scripts. This time, we’ll only watch for the uiserver.js file since we have other files not related to the server per se.
-
-```json
-...
-  "scripts": {
-    "start": "nodemon -w uiserver.js uiserver.js",
-  },
-...
-```
-
-Further, to generate the transformed JavaScript file, let’s add the compile and watch scripts, as in the
-original package.json file. The complete contents of this file, including the compile and watch scripts, are shown:
-
-```json
-{
- "name": "pro-mern-stack-2-ui",
- "version": "1.0.0",
- "description": "Pro MERN Stack (2nd Edition) - UI",
- "main": "index.js",
- "scripts": {
- "start": "nodemon -w uiserver.js uiserver.js",
- "compile": "babel src --out-dir public",
- "watch": "babel src --out-dir public --watch --verbose"
- },
- "repository": {
- "type": "git",
- "url": "git+https://github.com/vasansr/pro-mern-stack-2.git"
- },
- "author": "vasan.promern@gmail.com",
- "license": "ISC",
- "homepage": "https://github.com/vasansr/pro-mern-stack-2",
- "dependencies": {
- "express": "^4.16.3",
- "nodemon": "^1.18.4"
- },
- "devDependencies": {
- "@babel/cli": "^7.0.0",
- "@babel/core": "^7.0.0",
- "@babel/preset-env": "^7.0.0",
- "@babel/preset-react": "^7.0.0"
- }
-}
-```
-
-Now, you can test the application by running both the UI and API servers using npm start within each
-corresponding directory. As for the transformation, you could, within the ui directory, either run npm run compile or npm run watch. But the API calls will fail because the endpoint /graphql has no handlers in the UI server. So, instead of making API calls to the UI server, we need to change the UI to call the API server. This can be done in the App.jsx file, as shown
+Note the change of quote style from a single quote to back-ticks because we used string interpolation.
+The complete set of changes to the api/server.js file are shown:
 
 <pre>
-async function graphQLFetch(query, variables = {}) {
+...
+const fs = require('fs');<b>
+require('dotenv').config();</b>
+const express = require('express');
+...
+const url = <b>process.env.DB_URL || </b>'mongodb://localhost/issuetracker';
+<del>// Atlas URL - replace UUU with user, PPP with password, XXX with hostname
+// const url = 'mongodb+srv://UUU:PPP@cluster0-XXX.mongodb.net/issuetracker?retryWrites=true';
+// mLab URL - replace UUU with user, PPP with password, XXX with hostname
+// const url = 'mongodb://UUU:PPP@XXX.mlab.com:33533/issuetracker';</del>
+...
+<b>const port = process.env.API_SERVER_PORT || 3000;</b>
+
+(async funciton () {
   try {
-    const response = await fetch('<b>http:localhost:3000</b>/graphql', {
-      method: 'POST',
     ...
+    app.listen(<del>3000</del><b>port</b>, function() {
+      <del>console.log('API server started on port 3000');</del>
+      <b>console.log(`API server started on port ${port});</b>
+    });
+  ...
+...
 </pre>
 
-![ui-server](./resources/ui-running.JPG)
+Let’s also create a file called .env in the api directory. There is a file called sample.env that I have
+included in the GitHub repository that you may copy from and make changes to suit your environment,
+especially the DB_URL. The contents of this file are shown:
+
+<pre>
+## DB
+# Local
+DB_URL=mongo://localhost/issuetracker
+
+# Atlas - replace UUU: user, PPP: password, XXX: hostname
+# DB_URL=mongodb+srv://UUU:PPP@XXX.mongodb.net/issuetracker?retryWrites=true
+
+# mLab - replace UUU: user, PPP: password, XXX: hostname, YYY: port
+# DB_URL=mongodb://UUU:PPP@XXX.mlab.com:YYY/issuetracker
+
+## Server Port
+API_SERVER_PORT=3000
+</pre>
+
+It is recommended that the .env file itself not be checked into any repository. Each developer and
+deployment environments must specifically set the variables in the environment or in this file as per their needs. This is so that changes to this file remain in the developer’s computer and others’ changes don’t overwrite a developer’s settings.
+
+It’s also a good idea to change the nodemon command line so that it watches for changes to this file.
+Since the current command line does not include a watch specification (because it defaults to ".", that is, the current directory), let’s include that as well. The changes to this script in package.json are shown:
+
