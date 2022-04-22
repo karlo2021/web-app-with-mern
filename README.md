@@ -120,3 +120,40 @@ deployment environments must specifically set the variables in the environment o
 It’s also a good idea to change the nodemon command line so that it watches for changes to this file.
 Since the current command line does not include a watch specification (because it defaults to ".", that is, the current directory), let’s include that as well. The changes to this script in package.json are shown:
 
+<pre>
+...
+  "scripts": {
+    "start": "nodemon -e js,graphql <b>-w . -w .env</b> server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+...
+</pre>
+
+Now, if you specify API_SERVER_PORT as 4000 in the file .env and restart the API server (because
+nodemon needs to know the new watch files), you should see that it now uses port 4000. You could undo this change and instead define an environment variable (do not forget to use export in the bash shell to make the variable available to sub-processes) and see that the change has indeed been made. Note that the actual environment variables take precedence over (or override) the same variable defined in the .env file.
+
+Let’s also make a similar set of changes to api/scripts/trymongo.js to use the environment variable DB_URL. These changes are shown in Listing _7-9_. There are also changes to print out the URL after connecting, to cross-check that the environment variable is being used.
+
+<b>_Listing 7-9._</b> api/scripts/trymongo.js: Read DB_URI from Environment Using doenv
+
+<pre>
+require('dotenv').config();
+const { MongoClient } = require('mongodb');
+
+const url = <b>process.env.DB_URL ||</b> 'mongodb://localhost/issuetracker';
+<del>
+// Atlas URL - replace UUU with user, PPP with password, XXX with hostname
+// const url = 'mongodb+srv://UUU:PPP@cluster0-XXX.mongodb.net/issuetracker?retryWrites=true';
+
+// mLab URL - replace UUU with user, PPP with password, XXX with hostname
+// const url = 'mongodb://UUU:PPP@XXX.mlab.com:33533/issuetracker';</del>
+...
+client.connect(function(err, client) {
+  ...
+  <del>console.log('Connected to MongoDB');</del>
+  <b>console.log('Connected to MongoDB URL', url);</b>
+  ...
+  await client.connect();
+  <del>console.log('Connected to MongoDB');</del>
+  <b>console.log('Connected to MongoDB URL', url);</b>
+</pre>
