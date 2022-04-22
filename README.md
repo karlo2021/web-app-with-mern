@@ -157,3 +157,149 @@ client.connect(function(err, client) {
   <del>console.log('Connected to MongoDB');</del>
   <b>console.log('Connected to MongoDB URL', url);</b>
 </pre>
+
+You can now test the script using the command line and Node.js as before, and you’ll see the effect of
+different environment variables, both in the shell as well as in the .env file. We need to make a similar set of changes for the UI server. In this case, the variables we need to use are:
+
+•	 The UI server port<br/>
+•	 The API endpoint to call
+
+The UI server port changes are similar to the API server port changes. Let’s get that done first. Just as for the API server, let’s install the dotenv package.
+
+<pre>
+$ cd ui
+# npm install dotenv@6
+</pre>
+
+Then, in the ui/uiserver.js file, let’s require and configure dotenv:
+
+```js
+...
+require('dotenv').config();
+...
+```
+
+Let’s also change the hard-coded port to use the environment variable:
+
+<pre>
+...
+<b>const port = process.env.UI_SERVER-PORT || 8000;</b>
+...
+app.listen(<del>8000</del> <b>port</b>, function() {
+  <del>console.log('UI started on port 8000');</del>
+  <b>console.log(`UI started on port ${port}`);</b>
+});
+...
+</pre>
+
+Unlike these changes, the API endpoint has to somehow get to the browser in the form of JavaScript
+code. It is not something that can be read from an environment variable, because that is not transmitted to the browser.
+
+One way to do this is to replace a predefined string within the code with the variable’s value as part
+of the build and bundle process. I’ll describe this method in the next section. Although this is a valid and preferred choice for many people, I have chosen to make the configuration a runtime variable as opposed to a compile-time one. That’s because on the real UI servers, the way to set the server port and the API endpoint will be uniform.<br/>
+To do this, let’s generate a JavaScript file and inject that into index.html. This JavaScript file will contain a global variable with the contents of the environment. Let’s call this new script file env.js and include it in index.html. This is the only change to index.html in this section, and it’s shown in <b>Listing 7-10.</b>
+
+<b><i>Listing 7-10.</i></b> ui/public/index.html: Include the Script /env.js
+
+```html
+...
+  <div id="contents"></di>
+
+  <scripts src="/env.js"></scripts>
+  <scripts src="/App.js"></scripts>
+...
+```
+
+Now, within the UI server, let’s generate the contents of this script. It should result in setting a global variable called ENV with one or more properties that are set to environment variables, something like this:
+
+```js
+...
+window.ENV = {
+  UI_API_ENDPOINT: "http://localhost:3000"
+}
+...
+```
+
+When the JavaScript is executed, it will initialize the global variable ENV to the object. When the variable is needed in any other place, it can be referred from the global variable. Now, in the UI server code, let’s first initialize a variable for the API endpoint and default it if not found.
+Then we’ll construct an object with just this one variable as a property.
+
+```js
+...
+const UI_API_ENDPOINT = process.env.UI_API_ENDPOINT || 'http://localhost:3000';
+const env = { UI_API_ENDPOINT };
+...
+```
+
+Now, we can create a route in the server that responds to a GET call for env.js. Within the handler for
+this route, let’s construct the string as we need, using the env object, and send it as the response:
+
+```js
+...
+app.get('/env.js', function(req, res) {
+  res.send(`window.ENV = ${JSON.stringify(env)}`)
+})
+...
+```
+
+The complete changes to ui/uiserver.js are shown
+
+<pre>
+<b>require('dotenv').config();</b>
+const express = require('express');
+
+const app = express();
+app.use(express.static('public'));
+
+<b>
+const UI_API_ENDPOINT = process.env.UI_API_ENPOINT || 'http://localhost:3000';
+const env = { UI_API_ENDPOINT };
+
+app.get('/env.js', function(req, res) {
+  res.send(`window.ENV = ${JSON.stringify(env)}`)
+})</b>
+
+<b>const port = process.env.UI_SERVER_PORT || 8000;</b>
+
+app.listen(<del>8000</del><b>port</b>, function() {
+  <del>console.log('UI started on port 8000');</del>
+  <b>console.log(`UI started on port: ${port}`);</b>
+});
+</pre>
+Just like for the API server, let’s create an .env file to hold two variables, one for the server’s port and the other for the API endpoint the UI needs to access. You could use a copy of the sample.env file, whose contents are shown:
+
+<pre>
+UI_SERVER_PORT=8000
+UI_API_ENDPOINT=http://localhost:3000/graphql
+</pre>
+
+Finally, in App.jsx, where the API endpoint is hard-coded, let’s replace the hard-coding with a property
+from the global ENV variable. This change is shown:
+
+<pre>
+...
+async function graphQLFetch(query, variables = {}) {
+  try {
+    <del>const response = await fetch('http://localhost:3000/graphql', {</del>
+      <b>const response = await fetch(window.ENV.UI_API_ENDPOINT, {</b>
+    ...
+  ...
+}
+...
+</pre>
+
+Let’s also make nodemon watch for changes in the .env file. Since we are specifying individual files to
+watch in the UI server, this requires us to add another file to watch for using the -w command line option. The changes to ui/package.json are shown.
+
+```json
+...
+  "scripts": {
+    "start": "nodemon -w uiserver.js <b>-w .env</b> uiserver.js",
+...
+```
+
+Now, if you test the application with the default ports and endpoints, the application should be working
+as before. If you have been running npm run watch in a console, the changes to App.jsx would have been
+automatically recompiled.
+
+You can also ensure that a change to any of the variables, both via an actual environment variable and a
+change in the .env file (if you have one), do take effect. If you change a variable via an environment variable do remember to export it if you are using the bash shell. Also, the server has to be restarted since nodemon does not watch for changes to any environment variable.
