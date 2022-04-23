@@ -210,7 +210,7 @@ To do this, let’s generate a JavaScript file and inject that into index.html. 
 ...
 ```
 
-Now, within the UI server, let’s generate the contents of this script. It should result in setting a global variable called ENV with one or more properties that are set to environment variables, something like this:
+Now, within the UI server, let’s generate the contents of this script. It should result in setting a global variable called ENV with one or more properties that are set to environment variables, something like this: 
 
 ```js
 ...
