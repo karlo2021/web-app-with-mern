@@ -168,7 +168,7 @@ The UI server port changes are similar to the API server port changes. Let’s g
 
 <pre>
 $ cd ui
-# npm install dotenv@6
+$ npm install dotenv@6
 </pre>
 
 Then, in the ui/uiserver.js file, let’s require and configure dotenv:
@@ -290,12 +290,12 @@ async function graphQLFetch(query, variables = {}) {
 Let’s also make nodemon watch for changes in the .env file. Since we are specifying individual files to
 watch in the UI server, this requires us to add another file to watch for using the -w command line option. The changes to ui/package.json are shown.
 
-```json
+<pre>
 ...
   "scripts": {
     "start": "nodemon -w uiserver.js <b>-w .env</b> uiserver.js",
 ...
-```
+</pre>
 
 Now, if you test the application with the default ports and endpoints, the application should be working
 as before. If you have been running npm run watch in a console, the changes to App.jsx would have been

@@ -1,17 +1,13 @@
 const fs = require('fs');
+require('dotenv').config();
 const express = require('express');
 const { ApolloServer, UserInputError } = require('apollo-server-express');
 const { GraphQLScalarType } = require('graphql');
 const { Kind } = require('graphql/language');
 const { MongoClient } = require('mongodb');
 
-// const url = 'mongodb://localhost/issutracker';
+const url = process.env.DB_URL || 'mongodb+srv://karlo:mernstack2021@cluster0.wpj19.mongodb.net/issuetracker?retryWrites=true';
 
-// Atlas URL  - replace UUU with user, PPP with password, XXX with hostname
-const url = 'mongodb+srv://karlo:mernstack2021@cluster0.wpj19.mongodb.net/issuetracker?retryWrites=true';
-
-// mLab URL - replace UUU with user, PPP with password, XXX with hostname
-// const url = 'mongodb://UUU:PPP@XXX.mlab.com:33533/issuetracker';
 
 let db;
 
@@ -109,11 +105,13 @@ const app = express();
 
 server.applyMiddleware({ app, path: '/graphql' });
 
+const port = process.env.API_SERVER_PORT || 3000;
+
 (async function () {
   try {
     await connectToDb();
-    app.listen(3000, function () {
-      console.log('API server started on port 3000');
+    app.listen(port, function () {
+      console.log(`API server started on port ${port}`);
     });
   } catch (err) {
     console.log('ERROR:', err);

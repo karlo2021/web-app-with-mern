@@ -4,29 +4,29 @@
     "description": "Pro MERN Stack (2nd Edition) - UI",
     "main": "index.js",
     "scripts": {
-      "start": "nodemon -w uiserver.js uiserver.js",
-      "compile": "babel src --out-dir public",
-      "watch": "babel src --out-dir public --watch --verbose"
+        "start": "nodemon -w uiserver.js -w .env uiserver.js",
+        "compile": "babel src --out-dir public",
+        "watch": "babel src --out-dir public --watch --verbose"
     },
     "repository": {
-      "type": "git",
-      "url": "git+https://github.com/karlo2021/web-app-with-mern"
+        "type": "git",
+        "url": "git+https://github.com/karlo2021/web-app-with-mern"
     },
     "author": "",
     "license": "ISC",
     "bugs": {
-      "url": "https://github.com/karlo2021/web-app-with-mern"
+        "url": "https://github.com/karlo2021/web-app-with-mern"
     },
     "homepage": "https://github.com/karlo2021/web-app-with-mern#readme",
     "dependencies": {
-      "express": "^4.17.3",
-      "nodemon": "^2.0.15"
+        "dotenv": "^6.2.0",
+        "express": "^4.17.3",
+        "nodemon": "^2.0.15"
     },
     "devDependencies": {
-      "@babel/cli": "^7.17.6",
-      "@babel/core": "^7.17.8",
-      "@babel/preset-env": "^7.16.11",
-      "@babel/preset-react": "^7.16.7"
+        "@babel/cli": "^7.17.6",
+        "@babel/core": "^7.17.8",
+        "@babel/preset-env": "^7.16.11",
+        "@babel/preset-react": "^7.16.7"
     }
 }
-  

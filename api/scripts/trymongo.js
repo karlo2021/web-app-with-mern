@@ -1,13 +1,7 @@
+require('dotenv').config();
 const { MongoClient } = require('mongodb');
 
-// const url = 'mongo://localhost/issuetracker';
-
-// Atlas URL - replace UUU with user, PPP with password, XXX with hostname
-// const url = 'mongodb+srv://UUU:PPP@cluster0-XXX.mongodb.net/issuetracker?retryWrites=true';
-const url = 'mongodb+srv://karlo:mernstack2021@cluster0.wpj19.mongodb.net/issuetracker?retryWrites=true&w=majority'
-
-// mLab URL - replace UUU with user, PPP with password, XXX with hostname
-// const url = 'mongodb://UUU:PPP@XXX.mlab.com:33533/issuetracker';
+const url = process.env.DB_URL || 'mongodb+srv://karlo:mernstack2021@cluster0.wpj19.mongodb.net/issuetracker?retryWrites=true&w=majority'
 
 function testWithCallbacks(callback) {
   console.log('\n--- testWithCalbacks ---');
@@ -18,7 +12,7 @@ function testWithCallbacks(callback) {
       callback(err);
       return;
     }
-    console.log('Connected to database');
+    console.log('Connected to MongoDb URL', url);
 
     const db = client.db();
     const collection = db.collection('employees');
@@ -51,6 +45,8 @@ async function testWithAsync() {
   const client = new MongoClient(url, { useNewUrlParser: true });
   try{
     await client.connect();
+    console.log('Connected to MongoDB URL', url);
+    
     const db = client.db();
     const collection = db.collection('employees');
 
