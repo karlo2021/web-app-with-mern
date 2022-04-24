@@ -47,3 +47,50 @@ Now, the application is safe from malicious cross-site attacks. But this also me
 
 I’ll discuss CORS in more detail and why it’s safe to enable CORS at the current stage of the application, where all resources are publicly available without authentication. But let’s also look at alternatives for the sake of security. In this section, we’ll change the UI to make even API requests to the UI server, where we will install a proxy so that any request to /graphql is routed to the API server. This new architecture is depicted in Figure 7-4.
 
+![proxy-architecture](./resources/proxy-based-architecture.JPG)
+
+<i><b>Figure 7-4.</b> Proxy-based architecture</i>
+
+Such a proxy can be easily implemented using the http-proxy-middleware package. Let’s install this
+package:
+
+<pre>
+$ cd ui
+$ npm install http-proxy-middleware@0
+</pre>
+
+Now, a proxy can be used as a middleware that the package provides, mounted on the path /graphql,
+using app.use(). The middleware can be created with just a single option: the target of the proxy, which is the base URL of the host where the requests have to be proxied. Let’s define another environment variable called API_PROXY_TARGET and use its value as the target. If this variable is undefined, we can skip installing the proxy rather than default it.
+The changes to ui/uiserver.js are shown:
+
+<pre>
+...
+require('dotenv').config();
+const express = require('express');
+<b>const proxy = require('http-proxy-middleware');
+...
+const apiProxyTarget = process.env.API_PROXY_TARGER;
+if (apiProxyTarget) {
+  app.use('/graphql', proxy({ target: apiProxyTarget }));
+}</b>
+
+const UI_API_ENDPOINT = process.env.UI_API_ENDPOINT ||
+...
+</pre>
+
+Let’s now change the environment variable that specifies the API endpoint in ui/.env to set it to
+/graphql, which means /graphql on the same host as the origin. Further, let’s define the target of the
+proxy, the variable API_PROXY_TARGET as http://localhost:3000.
+
+<pre>
+...
+UI_API_ENPOINT=<del>http://localhost:3000</del>/graphql
+<b>API_PROXY_TARGET=http://localhost:3000</b>
+...
+</pre>
+
+Now, if you test the application and look at the Network tab in the browser’s Developer Console, you
+will find that there is only one request going to the UI server (port 8000) for each of the API calls, which successfully execute.
+You can use the proxy method as described in this section or let the UI make direct calls to the API
+server and enable CORS in the API server. Both options are equally good and your actual choice depends on
+various things, such as your deployment environment and the security needs of your application.
