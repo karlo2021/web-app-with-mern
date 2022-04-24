@@ -1,9 +1,16 @@
 require('dotenv').config();
 const express = require('express');
+const proxy = require('http-proxy-middleware');
 
 const app = express();
 
 app.use(express.static('public'));
+
+const apiProxyTarget = process.env.API_PROXY_TARGET;
+if(apiProxyTarget) {
+  app.use('/graphql', proxy({ target: apiProxyTarget }));
+  console.log('Hello')
+}
 
 const UI_API_ENDPOINT = process.env.UI_API_ENDPOINT || 'http://localhost:3000/graphql';
 const env = { UI_API_ENDPOINT };

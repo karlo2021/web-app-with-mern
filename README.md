@@ -94,3 +94,5 @@ will find that there is only one request going to the UI server (port 8000) for 
 You can use the proxy method as described in this section or let the UI make direct calls to the API
 server and enable CORS in the API server. Both options are equally good and your actual choice depends on
 various things, such as your deployment environment and the security needs of your application.
+
+![one-request-to-graphql](./resources/one-request.JPG)
