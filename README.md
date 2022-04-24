@@ -183,7 +183,7 @@ Let’s also change the hard-coded port to use the environment variable:
 
 <pre>
 ...
-<b>const port = process.env.UI_SERVER-PORT || 8000;</b>
+<b>const port = process.env.UI_SERVER_PORT || 8000;</b>
 ...
 app.listen(<del>8000</del> <b>port</b>, function() {
   <del>console.log('UI started on port 8000');</del>
@@ -215,7 +215,7 @@ Now, within the UI server, let’s generate the contents of this script. It shou
 ```js
 ...
 window.ENV = {
-  UI_API_ENDPOINT: "http://localhost:3000"
+  UI_API_ENDPOINT: "http://localhost:3000/graphql"
 }
 ...
 ```
@@ -225,7 +225,7 @@ Then we’ll construct an object with just this one variable as a property.
 
 ```js
 ...
-const UI_API_ENDPOINT = process.env.UI_API_ENDPOINT || 'http://localhost:3000';
+const UI_API_ENDPOINT = process.env.UI_API_ENDPOINT || 'http://localhost:3000/graphql';
 const env = { UI_API_ENDPOINT };
 ...
 ```
