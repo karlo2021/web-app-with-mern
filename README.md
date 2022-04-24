@@ -47,7 +47,7 @@ Now, the application is safe from malicious cross-site attacks. But this also me
 
 I’ll discuss CORS in more detail and why it’s safe to enable CORS at the current stage of the application, where all resources are publicly available without authentication. But let’s also look at alternatives for the sake of security. In this section, we’ll change the UI to make even API requests to the UI server, where we will install a proxy so that any request to /graphql is routed to the API server. This new architecture is depicted in Figure 7-4.
 
-![proxy-architecture](./resources/proxy-based-architecture.JPG)
+<img src="./resources/proxy-based-architecture.JPG" width="464" height="364" alt="proxy-architecture" />
 
 <i><b>Figure 7-4.</b> Proxy-based architecture</i>
 
