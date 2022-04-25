@@ -22,9 +22,9 @@ one or more rules, identified by the rule name, and the value being the error le
 
 ```js
 ...
-	rules: {
-		"quotes": "warning"
-	}
+  rules: {
+    "quotes": "warning"
+  }
 ...
 ```
 
@@ -33,7 +33,7 @@ enforced is single or double. When specifying these options, the value needs to 
 
 ```js
 ...
-	"quotes": ["warning", "double"]
+  "quotes": ["warning", "double"]
 ...
 ```
 
@@ -43,10 +43,10 @@ rules. Let’s also be specific about where the code is going to be run using th
 
 ```js
 {
-	"extends": "airbnb-base",
-	"env": {
-		"node": "true"
-	}
+  "extends": "airbnb-base",
+  "env": {
+    "node": "true"
+  }
 }
 ```
 
