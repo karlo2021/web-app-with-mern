@@ -83,3 +83,4 @@ line, or each property in a new line.
 ### Best Practices
 
 These rules are related to better ways of doing things, which typically helps you avoid errors.
+
