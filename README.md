@@ -237,4 +237,90 @@ async function testWithAsync() {
 }
 </pre>
 
+<b><i>Listing 7-20.</i></b> api/server.js: Fixes for ESLint Errors
 
+<pre>
+let db;
+
+<del>let aboutMessage = "Issue Tracker API v1.0";</del>
+<b>let aboutMessage = 'Issue Tracker API v1.0';</b>
+...
+const GraphQLDate = new GraphQLScalarType({
+  ...
+  parseValue(value) {
+    ...
+    <del>return isNaN(dateValue) ? undefined : dateValue;</del>
+    <b>return Number.isNaN(dateValue.getTime()) ? undefined : dateValue;</b>
+  },
+  parseLiteral(ast) {
+    if(ast.kind <b>=</b>== Kind.STRING) {
+      const value = new Date(ast.value);
+      <del>return isNaN(value) ? undefined : value;</del>
+      <b>retrun Number.isNaN(value.getTime()) ? undefinde : value;</b>
+    }
+    <b>return undefined;</b>
+  },
+});
+...
+<del>const resolver = {
+  ...
+};</del>
+...
+function setAboutMessage(_, { message }) {
+  <del>return aboutMessage = message;</del>
+  <b>aboutMessage = message;
+  return aboutMessage;</b>
+}
+...
+async function issueAdd(_, { issue }) {
+  ...
+  <del>errors.push('Field "title" must be at least 3 characters long')</del>
+  <b>errors.push('Field "title" must be at least 3 characters long');</b>
+  ...
+  <del>if (issue.status == 'Assigned' && !issue.owner) {</del>
+  <b>if (issue.status === 'Assigned' && !issue.owner) {</b>
+  ...
+  <b>const newIssue = Object.assign({}, issue);</b>
+  <del>issue</del> <b>newIssue</b>.created = new Date();
+  <del>issue</del> <b>newIssue</b>id = await getNextSequence('issue');
+  const result = await db.collection('issue').insertOne(<del>issue</del> <b>newIssue</b>);
+  ...
+}
+...<b>
+const resolvers = {
+  ...
+};</b>
+...
+const server = new ApolloServer({
+  ...
+  <del>formatError: error => {</del>
+  <b>formatError: (error) => {</b>
+  ...
+});
+...
+<del>const enableCors = (process.env.ENABLE_CORS || 'true') == 'true';</del>
+<b>const enableCors = (process.env.ENABLE_CORS || 'true') === 'true';</b>
+...
+(async function <b>start</b>() {
+  ...
+    app.listen(port, <del>function</del> () <b>=></b> {
+      ...
+  ...
+<del>})();</del><b>
+}());</b>
+</pre>
+
+Finally, let’s add an npm script that will lint all the files in the API directory. The command line is
+similar to what we used before to lint the entire directory. The changes to this are shown in _Listing 7-21_, in package.json.
+
+<b><i>Listing 7-21.</i></b> api/package.json: New Script for lint
+
+<pre>
+{
+  "scripts": {
+    "start": "nodemon -e js,graphql -w . -w .env server.js",
+    <b>"lint": "eslint .",
+    </b>"test": "echo \"Error: no test specified\" && exit 1"
+  },
+...
+</pre>
