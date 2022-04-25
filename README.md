@@ -166,8 +166,8 @@ const issueDB = [
   },
   {
     <del>id: 2, status: 'Assigned', owner: 'Eddie', effort: 14,
-    created: new Date('2019-01-16'), due: new Date('2019-02-01'),  
-    </del><b>id: 2,
+    created: new Date('2019-01-16'), due: new Date('2019-02-01'),</del>  
+    <b>id: 2,
     status: 'Assigned',
     owner: 'Eddie',
     effort: 14,
@@ -219,10 +219,10 @@ function testWithCallbacks(callback) {
           client.close();
           callback(err);</del>
         });
-            <b>cosnole.log('Result of find:\n', docs);
+            <b>console.log('Result of find:\n', docs);
             client.close();
             callback();
-        });
+        });</b>
     ...
 async function testWithAsync() {
   ...
@@ -236,3 +236,5 @@ async function testWithAsync() {
   ...</b>
 }
 </pre>
+
+
