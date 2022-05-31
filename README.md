@@ -6,13 +6,13 @@ The state of a component is captured in a variable called this.state in the comp
 
 Change the loop that creates the set of IssueRows to use the state variable called issues rather than the global array
 
-<pre>
+```js
 ...
-  const issueRows = <b>this.state.</b>issues.map(issue => 
+  const issueRows = this.state.issues.map(issue => 
     <IssueRow key={issue.id} issue={issue} />
   );
 ...
-</pre>
+```
 
 We already have a global array of issues; let’s rename this array to initialIssues, just to make it explicit that it is only an initial set
 
